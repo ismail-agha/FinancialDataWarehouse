@@ -4,7 +4,7 @@ import io
 from datetime import datetime
 from configs.config_urls import endpoint_equity_historical_csv, headers
 
-from_date = '30/05/2023'
+from_date = '08/06/2023'
 to_date = datetime.now().strftime("%d/%m/%Y")
 result =['500002','500003','500008','500009']
 
@@ -17,3 +17,4 @@ for row in range(1,600):
     if response.status_code == 200:
         # API-JSON
         print(f"Response({row}): {response.content.decode('utf-8', errors='ignore')}")
+
