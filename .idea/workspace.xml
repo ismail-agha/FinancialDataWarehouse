@@ -1,18 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="6306b164-a51a-4a56-91e2-cf2d8595bc4a" name="Changes" comment="commit">
-      <change afterPath="$PROJECT_DIR$/data_loads/data_load_equity_historical_data.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/data_loads/data_load_equity_list.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/configs/config_urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/configs/config_urls.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/data_load_equity_list.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/data_loads/data_load_equity_market_as_on_date_data.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/data_loads/data_load_equity_market_historical_data.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/data_loads/test.py" beforeDir="false" afterPath="$PROJECT_DIR$/data_loads/test.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/db/database_and_models.py" beforeDir="false" afterPath="$PROJECT_DIR$/db/database_and_models.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/logs/data_load_equity_market_historical_data_20230611_190012.log" beforeDir="false" />
-    </list>
+    <list default="true" id="6306b164-a51a-4a56-91e2-cf2d8595bc4a" name="Changes" comment="commit" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -248,7 +237,14 @@
       <option name="project" value="LOCAL" />
       <updated>1686490266901</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="commit">
+      <created>1707576249437</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1707576249437</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
