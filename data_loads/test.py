@@ -5,6 +5,13 @@ import requests
 from datetime import datetime
 from configs.config_urls import upstox_historical
 
+import os
+import sys
+
+# Add parent directory to the Python path
+current_dir = os.path.dirname(os.path.abspath(__file__))
+parent_dir = os.path.dirname(current_dir)
+sys.path.append(parent_dir)
 
 try:
     engine = create_engine('postgresql://finapp_user:12345@localhost:5432/FinanceDB')
