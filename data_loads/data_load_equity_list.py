@@ -5,7 +5,7 @@ from sqlalchemy import text
 import concurrent.futures
 
 def bse():
-    file_path = '../files/BSE All-Securities 2024-01-27.json'
+    file_path = '../files/BSE All-Securities.json'
 
     # Open the file and load the JSON data
     with open(file_path, 'r') as file:
