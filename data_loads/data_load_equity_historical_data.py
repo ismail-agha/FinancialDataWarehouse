@@ -38,7 +38,9 @@ def main():
                         when bse=false and nse=true then 'NSE'\
                         end as exg\
                         from sm.equity_list\
-                        where status='Active' and isin_number in ('INE587G01015', 'INF200K01VT2', 'INE00CE01017') ;"
+                        where status='Active' " \
+                   "--and isin_number in ('INE587G01015', 'INF200K01VT2', 'INE00CE01017') " \
+                   ";"
 
     result_df = pd.read_sql_query(sql_get_isin, engine)
     #print(result_df)
