@@ -5,7 +5,7 @@ from sqlalchemy import text
 import concurrent.futures
 
 def bse():
-    file_path = '../files/BSE All-Securities.json'
+    file_path = '../files/BSE All-Securities*.json'
 
     # Open the file and load the JSON data
     with open(file_path, 'r') as file:
@@ -39,7 +39,7 @@ def bse():
     return df
 
 def nse():
-    df = pd.read_csv('../files/NSE_EQUITY_L.csv')
+    df = pd.read_csv('../files/NSE_EQUITY_L*.csv')
     df = df.loc[:, [' ISIN NUMBER', 'SYMBOL', 'NAME OF COMPANY', ' FACE VALUE']]
     df[' FACE VALUE'] = pd.to_numeric(df[' FACE VALUE'], errors='coerce').fillna(0).astype('int')
 
