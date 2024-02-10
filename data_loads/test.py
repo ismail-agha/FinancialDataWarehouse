@@ -4,10 +4,8 @@ from sqlalchemy.ext.automap import automap_base
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.exc import SQLAlchemyError
 
-# Establish a connection to the PostgreSQL database
-engine = create_engine('postgresql://finapp_user:12345@localhost:5432/FinanceDB')
-
-Session = sessionmaker(bind=engine)
-session = Session()
-
-print(f'engine = {engine}')
+try:
+    engine = create_engine('postgresql://finapp_user:12345@localhost:5432/FinanceDB')
+    print('Connection to the database established successfully.')
+except SQLAlchemyError as e:
+    print('Failed to connect to the database:', str(e))
