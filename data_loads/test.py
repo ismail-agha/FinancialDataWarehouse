@@ -34,7 +34,7 @@ print(data)
 
 
 import json
-file_path = '/files/BSE All-Securities*.json'
+file_path = '../files/BSE All-Securities_20240210.json'
 # Open the file and load the JSON data
 with open(file_path, 'r') as file:
     data = json.load(file)
