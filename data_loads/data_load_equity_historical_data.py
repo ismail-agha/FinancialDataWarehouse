@@ -5,7 +5,15 @@ from datetime import datetime
 import logging
 import concurrent.futures
 
+import os
+import sys
+# Add parent directory to the Python path
+current_dir = os.path.dirname(os.path.abspath(__file__))
+parent_dir = os.path.dirname(current_dir)
+sys.path.append(parent_dir)
+
 from configs.config_urls import upstox_historical
+
 from db.database_and_models import engine, TABLE_MODEL_EQUITY_HISTORICAL_DATA, session, SQLAlchemyError
 from sqlalchemy.dialects.postgresql import insert as pg_insert
 
