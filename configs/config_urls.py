@@ -36,3 +36,23 @@ endpoint_equity_daily_json_part2 = bse_api_base_url + 'HighLow/w?Type=EQ&flag=C&
 endpoint_equity_daily_json_part3 = bse_api_base_url + 'StockTrading/w?flag=&quotetype=EQ&scripcode={}' #Turnover (Cr.), MarketCap, CktLimit (Upper/Lower Price Band)
 
 endpoint_equity_daily_json_part4 = bse_api_base_url + 'ComHeader/w?quotetype=EQ&scripcode={}&seriesid=' #ROE , P/E, P/B, EPS(TTM), CEPS(TTM), FaceValue
+
+
+
+# ----------------------------------------------------------------------------------------------------------------------
+# UPSTOX
+# ----------------------------------------------------------------------------------------------------------------------
+
+upstox_base_url = 'https://api.upstox.com/v2/'
+
+url_upstox_token = upstox_base_url + 'login/authorization/token'
+
+upstox_historical = upstox_base_url + 'historical-candle/{}_EQ%7C{}/{}/{}/{}'
+
+upstox_eq_full_market_quote = upstox_base_url + 'market-quote/quotes?instrument_key={}'
+
+upstox_headers_market_quote = {
+    'Accept': 'application/json',
+    'Authorization': 'Bearer {}'
+}
+

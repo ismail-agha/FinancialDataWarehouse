@@ -1,4 +1,4 @@
-from sqlalchemy import create_engine, Table, Column, Integer, String, MetaData, select
+from sqlalchemy import create_engine, Table, Column, Integer, String, MetaData, select, insert
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.ext.automap import automap_base
 from sqlalchemy.ext.declarative import declarative_base
@@ -11,72 +11,54 @@ session = Session()
 
 # Define the table structure
 metadata = MetaData()
-# TABLE_EQUITY_LIST = Table('EQUITY_LIST', metadata, schema='sm',
-#                         Column('security_code', Integer, primary_key=True),
-#                         Column('issuer_name', String),
-#                         Column('security_id', String),
-#                         Column('security_name', Integer),
-#                         Column('status', String),
-#                         Column('security_group', Integer),
-#                         Column('face_value', Integer),
-#                         Column('isin_no', String),
-#                         Column('industry', Integer),
-#                         Column('sector_name', Integer),
-#                         Column('industry_new_name', String),
-#                         Column('igroup_name', Integer),
-#                         Column('audit_create_date', Integer),
-#                         Column('audit_update_date', String)
-#                     )
-
-
-# Create a table object with the specified schema and table name
-#TABLE_EQUITY_LIST = Table('equity_list', metadata, schema='sm', autoload_with=engine)
-
 
 Base = declarative_base()
 class TABLE_MODEL_EQUITY_LIST(Base):
     __tablename__ = 'equity_list'
     __table_args__ = {'schema': 'sm'}
 
-    security_code = Column(String, primary_key=True)
+    isin_number = Column('isin_number', String, primary_key=True)
+    bse = Column('bse', String)
+    security_code_bse = Column(String)
+    nse = Column('nse', String)
+    security_code_nse = Column(String)
+
     issuer_name = Column(String)
     security_id = Column('security_id', String)
     security_name = Column('security_name', Integer)
     status = Column('status', String)
     security_group = Column('security_group', Integer)
     face_value = Column('face_value', Integer)
-    isin_no = Column('isin_no', String)
     industry = Column('industry', Integer)
-    sector_name = Column('sector_name', Integer)
-    industry_new_name = Column('industry_new_name', String)
-    igroup_name = Column('igroup_name', Integer)
-    audit_create_date = Column('audit_create_date', Integer)
+    market_capitalisation_in_crore = Column('market_capitalisation_in_crore', String)
+    audit_create_date = Column('audit_create_date', String)
     audit_update_date = Column('audit_update_date', String)
 
     def __repr__(self):
         return f"<YourTable(id={self.id}, security_code='{self.security_code}', column_name='{self.column_name}')>"
 
 
-class TABLE_MODEL_EQUITY_MARKET_HISTORICAL_DATA(Base):
-    __tablename__ = 'equity_market_historical_data'
+class TABLE_MODEL_EQUITY_HISTORICAL_DATA(Base):
+    __tablename__ = 'equity_historical_data'
     __table_args__ = {'schema': 'sm'}
 
-    security_code = Column(String, primary_key=True)
+    exchange = Column(String)
     trade_date = Column(String)
-    previous_close = Column(Integer)
+    isin_number = Column(String, primary_key=True)
+    security_name = Column(String)
     open = Column(Integer)
     high = Column(Integer)
     low = Column(Integer)
     close = Column(Integer)
-    weighted_average_price_wap = Column(Integer)
-    number_of_shares = Column(Integer)
-    number_of_trades = Column(Integer)
-    total_turnover = Column(Integer)
-    deliverable_quantity = Column(Integer)
-    percentage_deliverable_quantity_to_traded_quantity = Column(Integer)
-    spread_high_low = Column(Integer)
-    spread_close_open = Column(Integer)
-    audit_create_date = Column(String)
+    volume = Column(Integer)
+    open_interest = Column(Integer)
+    net_change = Column(Integer)
+    total_buy_quantity = Column(Integer)
+    lower_circuit_limit = Column(Integer)
+    upper_circuit_limit = Column(Integer)
+    total_sell_quantity = Column(Integer)
+    average_price = Column(Integer)
+    audit_creation_date = Column(String)
 
 
     def __repr__(self):
