@@ -31,3 +31,10 @@ from_date = '2024-02-08'
 to_date = datetime.now().strftime("%Y-%m-%d")
 data = make_api_call(upstox_historical.format('NSE', 'INE587G01015', interval, to_date, from_date))
 print(data)
+
+
+import json
+file_path = '../files/BSE All-Securities*.json'
+# Open the file and load the JSON data
+with open(file_path, 'r') as file:
+    data = json.load(file)
