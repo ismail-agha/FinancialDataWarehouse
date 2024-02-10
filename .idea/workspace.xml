@@ -2,8 +2,9 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="6306b164-a51a-4a56-91e2-cf2d8595bc4a" name="Changes" comment="commit">
-      <change beforePath="$PROJECT_DIR$/data_loads/data_load_equity_list.py" beforeDir="false" afterPath="$PROJECT_DIR$/data_loads/data_load_equity_list.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/data_loads/test.py" beforeDir="false" afterPath="$PROJECT_DIR$/data_loads/test.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/data_loads/data_load_equity_daily.py" beforeDir="false" afterPath="$PROJECT_DIR$/data_loads/data_load_equity_daily.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/data_loads/data_load_equity_historical_data.py" beforeDir="false" afterPath="$PROJECT_DIR$/data_loads/data_load_equity_historical_data.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -394,7 +395,14 @@
       <option name="project" value="LOCAL" />
       <updated>1707589164669</updated>
     </task>
-    <option name="localTasksCounter" value="26" />
+    <task id="LOCAL-00026" summary="commit">
+      <created>1707589559476</created>
+      <option name="number" value="00026" />
+      <option name="presentableId" value="LOCAL-00026" />
+      <option name="project" value="LOCAL" />
+      <updated>1707589559476</updated>
+    </task>
+    <option name="localTasksCounter" value="27" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">

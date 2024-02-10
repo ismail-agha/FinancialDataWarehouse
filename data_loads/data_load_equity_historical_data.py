@@ -1,16 +1,17 @@
+import os
+import sys
+
+# Add parent directory to the Python path
+current_dir = os.path.dirname(os.path.abspath(__file__))
+parent_dir = os.path.dirname(current_dir)
+sys.path.append(parent_dir)
+
 import pandas as pd
 import requests
 import time
 from datetime import datetime
 import logging
 import concurrent.futures
-
-import os
-import sys
-# Add parent directory to the Python path
-current_dir = os.path.dirname(os.path.abspath(__file__))
-parent_dir = os.path.dirname(current_dir)
-sys.path.append(parent_dir)
 
 from configs.config_urls import upstox_historical
 
