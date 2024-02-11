@@ -39,19 +39,19 @@ log_msg_succ = ''
 log_msg_error = ''
 
 def main():
-    sql_get_isin = "select isin_number," \
-                   " case when security_name='NaN' then issuer_name else security_name end as security_name, \
-                        case \
-                        when bse=true and nse=true then 'both'\
-                        when bse=true and nse=false then 'BSE'\
-                        when bse=false and nse=true then 'NSE'\
-                        end as exg\
-                        from sm.equity_list\
-                        where status='Active' " \
-                   "--and isin_number in ('INE022F01015') " \
-                   ";"
+    # sql_get_isin = "select isin_number," \
+    #                " case when security_name='NaN' then issuer_name else security_name end as security_name, \
+    #                     case \
+    #                     when bse=true and nse=true then 'both'\
+    #                     when bse=true and nse=false then 'BSE'\
+    #                     when bse=false and nse=true then 'NSE'\
+    #                     end as exg\
+    #                     from sm.equity_list\
+    #                     where status='Active' " \
+    #                "--and isin_number in ('INE022F01015') " \
+    #                ";"
 
-    result_df = pd.read_sql_query(sql_get_isin, engine)
+    result_df = pd.read_sql_query(read_sql_file('../sql/sql_identify_equity_for_historical_load.sql'), engine)
     #print(result_df)
 
     interval = 'day'
@@ -98,6 +98,10 @@ def main():
 
         time.sleep(2)
 
+def read_sql_file(file_path):
+    with open(file_path, 'r') as file:
+        sql_query = file.read()
+    return sql_query
 
 def make_api_call(url):
     try:
