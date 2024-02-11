@@ -148,5 +148,9 @@ def insert_data(data, isin_number, security_name, exchange):
 
 if __name__ == "__main__":
     print(f'Start time: {pd.Timestamp.today()}')
+    logger.info(f'Start time: {pd.Timestamp.today()}\n')
+
     main()
+
     print(f'End time: {pd.Timestamp.today()}')
+    logger.info(f'End time: {pd.Timestamp.today()}\n')
