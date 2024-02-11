@@ -8,11 +8,11 @@ from sm.equity_list
 where status='Active' and nse=true
 )
 , b as (
-select a.*, stat.min_trade_date, stat.max_trade_date
+select a.*, stat.min_trade_date, stat.max_trade_date, stat.audit_creation_date
 from a
 left join sm.AUDIT_EQUITY_HISTORICAL_LOAD_STATUS stat
 on a.isin_number = stat.isin_number and a.exg = stat.exchange
-where a.isin_number in ('INE737W01013', 'INE587G01015', 'INE714B01016', 'INE801L01010')
+--where a.isin_number in ('INE00CE01017')
 )
 select * from b
-where min_trade_date is null and max_trade_date is null;
+where audit_creation_date is null;

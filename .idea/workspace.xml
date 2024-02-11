@@ -2,9 +2,10 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="6306b164-a51a-4a56-91e2-cf2d8595bc4a" name="Changes" comment="commit">
-      <change afterPath="$PROJECT_DIR$/sql/sql_identify_equity_for_historical_load.sql" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/data_loads/data_load_equity_historical_data.py" beforeDir="false" afterPath="$PROJECT_DIR$/data_loads/data_load_equity_historical_data.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/db/database_and_models.py" beforeDir="false" afterPath="$PROJECT_DIR$/db/database_and_models.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/sql/sql_identify_equity_for_historical_load.sql" beforeDir="false" afterPath="$PROJECT_DIR$/sql/sql_identify_equity_for_historical_load.sql" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -458,7 +459,14 @@
       <option name="project" value="LOCAL" />
       <updated>1707636261352</updated>
     </task>
-    <option name="localTasksCounter" value="35" />
+    <task id="LOCAL-00035" summary="commit">
+      <created>1707655378902</created>
+      <option name="number" value="00035" />
+      <option name="presentableId" value="LOCAL-00035" />
+      <option name="project" value="LOCAL" />
+      <updated>1707655378902</updated>
+    </task>
+    <option name="localTasksCounter" value="36" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">

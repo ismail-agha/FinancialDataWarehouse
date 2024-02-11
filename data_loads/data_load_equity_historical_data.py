@@ -15,7 +15,7 @@ import concurrent.futures
 
 from configs.config_urls import upstox_historical
 
-from db.database_and_models import engine, TABLE_MODEL_EQUITY_HISTORICAL_DATA, session, SQLAlchemyError
+from db.database_and_models import engine, TABLE_MODEL_EQUITY_HISTORICAL_DATA, session, SQLAlchemyError, text
 from sqlalchemy.dialects.postgresql import insert as pg_insert
 
 #Logs
@@ -39,17 +39,6 @@ log_msg_succ = ''
 log_msg_error = ''
 
 def main():
-    # sql_get_isin = "select isin_number," \
-    #                " case when security_name='NaN' then issuer_name else security_name end as security_name, \
-    #                     case \
-    #                     when bse=true and nse=true then 'both'\
-    #                     when bse=true and nse=false then 'BSE'\
-    #                     when bse=false and nse=true then 'NSE'\
-    #                     end as exg\
-    #                     from sm.equity_list\
-    #                     where status='Active' " \
-    #                "--and isin_number in ('INE022F01015') " \
-    #                ";"
 
     result_df = pd.read_sql_query(read_sql_file('../sql/sql_identify_equity_for_historical_load.sql'), engine)
     #print(result_df)
@@ -155,6 +144,34 @@ def insert_data(data, isin_number, security_name, exchange):
         print(f'Finally Completed: SecurityCode={isin_number} Loaded Successfuly.\n\n')
         logger.info(f'insert_data() - Finally Completed: SecurityCode={isin_number} Loaded Successfuly.\n')
         session.close()
+
+    # Insert into stats
+    # Define the SQL statement
+    sql_ins_historical_load_status = text("""
+        INSERT INTO sm.audit_equity_historical_load_status (exchange, isin_number, audit_creation_date, audit_update_date)
+        VALUES (:exchange, :isin_number, :audit_creation_date, :audit_update_date)
+        ON CONFLICT (exchange, isin_number)
+        DO UPDATE SET
+            audit_update_date = EXCLUDED.audit_update_date
+        WHERE sm.audit_equity_historical_load_status.exchange = :exchange and sm.audit_equity_historical_load_status.isin_number = :isin_number
+    """)
+
+    # Bind parameters
+    params = {
+        "exchange": exchange,
+        'isin_number': isin_number,
+        'audit_creation_date': pd.Timestamp.today(),
+        'audit_update_date': pd.Timestamp.today()
+    }
+
+    # Execute the SQL statement
+    try:
+        with engine.connect() as connection:
+            a = connection.execute(sql_ins_historical_load_status, params)
+            connection.commit()
+    except Exception as e:
+        print(f"insert_data(audit_equity_historical_load_status) - Except: SecurityCode={isin_number} Errored-Out:", e)
+        logger.error(f'insert_data(audit_equity_historical_load_status) - SecurityCode={isin_number} Errored-Out: {e}')
 
 
 if __name__ == "__main__":

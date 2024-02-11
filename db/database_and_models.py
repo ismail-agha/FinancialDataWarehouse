@@ -1,4 +1,4 @@
-from sqlalchemy import create_engine, Table, Column, Integer, String, MetaData, select, insert
+from sqlalchemy import create_engine, Table, Column, Integer, String, MetaData, select, insert, text
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.ext.automap import automap_base
 from sqlalchemy.ext.declarative import declarative_base
@@ -37,6 +37,12 @@ class TABLE_MODEL_EQUITY_LIST(Base):
     def __repr__(self):
         return f"<YourTable(id={self.id}, security_code='{self.security_code}', column_name='{self.column_name}')>"
 
+class TABLE_MODEL_AUDIT_EQUITY_HISTORICAL_LOAD_STATUS(Base):
+    __tablename__ = 'audit_equity_historical_load_status'
+    __table_args__ = {'schema': 'sm'}
+
+    exchange = Column(String)
+    isin_number = Column(String, primary_key=True)
 
 class TABLE_MODEL_EQUITY_HISTORICAL_DATA(Base):
     __tablename__ = 'equity_historical_data'
