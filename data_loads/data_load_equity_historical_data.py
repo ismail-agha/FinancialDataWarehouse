@@ -55,7 +55,7 @@ def main():
     #print(result_df)
 
     interval = 'day'
-    from_date = '2024-01-01'
+    from_date = '2000-01-01'
     to_date = datetime.now().strftime("%Y-%m-%d")
 
     for index, row in result_df.iterrows():
