@@ -1,3 +1,11 @@
+import os
+import sys
+
+# Add parent directory to the Python path
+current_dir = os.path.dirname(os.path.abspath(__file__))
+parent_dir = os.path.dirname(current_dir)
+sys.path.append(parent_dir)
+
 import requests
 from configs.config_urls import url_upstox_token
 
@@ -8,7 +16,7 @@ headers = {
 }
 
 data = {
-    'code': 'mIlDwA',
+    'code': '5Rqqhv',
     'client_id': '9cf11b90-77b8-432d-a41c-0e5e425dc285',
     'client_secret': 'pzws0rr44o',
     'redirect_uri': 'http://127.0.0.1',

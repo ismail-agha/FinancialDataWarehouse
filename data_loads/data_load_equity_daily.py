@@ -19,9 +19,21 @@ from configs.config_urls import upstox_eq_full_market_quote, upstox_headers_mark
 from db.database_and_models import engine, TABLE_MODEL_EQUITY_HISTORICAL_DATA, session, SQLAlchemyError
 from sqlalchemy.dialects.postgresql import insert as pg_insert
 
-# Logs
 # Create a timestamp string
 timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+
+# Configure the logging settings
+log_filename = f"../logs/data_load_equity_daily_{timestamp}.log"
+
+logging.basicConfig(
+    level=logging.DEBUG,
+    format='%(asctime)s - %(levelname)s - %(message)s',
+    filename=log_filename,
+    filemode='w'
+)
+
+# Create a logger object
+logger = logging.getLogger(__name__)
 
 
 def main():
@@ -94,12 +106,13 @@ def api_get_data(upstox_token, isin_df):
 
                         df = pd.concat([df, pd.DataFrame([new_row])], ignore_index=True)
 
-                    print(df.to_string())
+                    #print(df.to_string())
 
                     insert_data(df)
 
             except Exception as exc:
                 print(f'API call to {url} failed: {exc}')
+                logger.error(f'ERROR: PI call to {url} failed due to - {exc}')
 
 
 def make_api_call(url, headers):
@@ -125,9 +138,11 @@ def insert_data(data):
     except SQLAlchemyError as e:
         error = str(e)
         print("Error inserting data into the database:", e)
+        logger.error(f'ERROR: insert_data() failed due to - {e}')
 
     except Exception as e:
         print("Error inserting data into the database:", e)
+        logger.error(f'ERROR: insert_data() failed due to - {e}')
 
     finally:
         session.close()
@@ -135,5 +150,9 @@ def insert_data(data):
 
 if __name__ == "__main__":
     print(f'Start time: {pd.Timestamp.today()}')
+    logger.info(f'Start time: {pd.Timestamp.today()}\n')
+
     main()
+
+    logger.info(f'Start time: {pd.Timestamp.today()}\n')
     print(f'End time: {pd.Timestamp.today()}')
