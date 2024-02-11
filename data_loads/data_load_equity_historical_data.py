@@ -48,14 +48,14 @@ def main():
                         end as exg\
                         from sm.equity_list\
                         where status='Active' " \
-                   "--and isin_number in ('INE587G01015', 'INF200K01VT2', 'INE00CE01017') " \
+                   "and isin_number in ('INE022F01015') " \
                    ";"
 
     result_df = pd.read_sql_query(sql_get_isin, engine)
     #print(result_df)
 
     interval = 'day'
-    from_date = '2000-01-01'
+    from_date = '2024-01-01'
     to_date = datetime.now().strftime("%Y-%m-%d")
 
     for index, row in result_df.iterrows():
@@ -81,13 +81,20 @@ def main():
                         print(f'API call to {url} failed: {exc}')
 
         elif row['exg'] == 'BSE': #INF200K01VT2
-            data = make_api_call(upstox_historical.format('BSE', row['isin_number'], interval, to_date, from_date))
-            insert_data(data['data']['candles'], row['isin_number'], row['security_name'], row['exg'])
-            pass
+            try:
+                data = make_api_call(upstox_historical.format('BSE', row['isin_number'], interval, to_date, from_date))
+                insert_data(data['data']['candles'], row['isin_number'], row['security_name'], row['exg'])
+            except Exception as exc:
+                print(f'ERROR: BSE({row["isin_number"]}) make_api_call() insert_data(): {exc}')
+                logger.error(f'ERROR: BSE({row["isin_number"]}) make_api_call() insert_data(): {exc}')
+
         elif row['exg'] == 'NSE': #INE00CE01017
-            data = make_api_call(upstox_historical.format('NSE', row['isin_number'], interval, to_date, from_date))
-            insert_data(data['data']['candles'], row['isin_number'], row['security_name'], row['exg'])
-            pass
+            try:
+                data = make_api_call(upstox_historical.format('NSE', row['isin_number'], interval, to_date, from_date))
+                insert_data(data['data']['candles'], row['isin_number'], row['security_name'], row['exg'])
+            except Exception as exc:
+                print(f'ERROR: NSE({row["isin_number"]}) make_api_call() insert_data(): {exc}')
+                logger.error(f'ERROR: NSE({row["isin_number"]}) make_api_call() insert_data(): {exc}')
 
         time.sleep(2)
 
@@ -137,7 +144,7 @@ def insert_data(data, isin_number, security_name, exchange):
         error = str(e)
 
     except Exception as e:
-        print("insert_data() - 2. Except: SecurityCode={isin_number} Errored-Out:", e)
+        print(f"insert_data() - 2. Except: SecurityCode={isin_number} Errored-Out:", e)
         logger.error(f'insert_data() - Except(2): SecurityCode={isin_number} Errored-Out: {e}')
 
     finally:
