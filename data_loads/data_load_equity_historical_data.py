@@ -48,7 +48,7 @@ def main():
                         end as exg\
                         from sm.equity_list\
                         where status='Active' " \
-                   "and isin_number in ('INE022F01015') " \
+                   "--and isin_number in ('INE022F01015') " \
                    ";"
 
     result_df = pd.read_sql_query(sql_get_isin, engine)
