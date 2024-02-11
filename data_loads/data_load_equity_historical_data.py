@@ -98,7 +98,7 @@ def make_api_call(url):
     return response.json()
 
 def insert_data(data, isin_number, security_name, exchange):
-    --print(data)
+    #print(data)
     df = pd.DataFrame(data)
     df.columns = ['trade_date', 'open', 'high', 'low', 'close', 'volume', 'open_interest']
     df['exchange'] = exchange
