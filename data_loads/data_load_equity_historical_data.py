@@ -22,21 +22,21 @@ from sqlalchemy.dialects.postgresql import insert as pg_insert
 # Create a timestamp string
 timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
 
-# # Configure the logging settings
-# log_filename = f"../logs/data_load_equity_historical_data_{timestamp}.log"
-#
-# logging.basicConfig(
-#     level=logging.DEBUG,
-#     format='%(asctime)s - %(levelname)s - %(message)s',
-#     filename=log_filename,
-#     filemode='w'
-# )
-#
-# # Create a logger object
-# logger = logging.getLogger(__name__)
-#
-# log_msg_succ = ''
-# log_msg_error = ''
+# Configure the logging settings
+log_filename = f"../logs/data_load_equity_historical_data_{timestamp}.log"
+
+logging.basicConfig(
+    level=logging.DEBUG,
+    format='%(asctime)s - %(levelname)s - %(message)s',
+    filename=log_filename,
+    filemode='w'
+)
+
+# Create a logger object
+logger = logging.getLogger(__name__)
+
+log_msg_succ = ''
+log_msg_error = ''
 
 def main():
     sql_get_isin = "select isin_number," \
@@ -93,9 +93,24 @@ def main():
 
 
 def make_api_call(url):
-    headers = {'Accept': 'application/json'}
-    response = requests.get(url, headers=headers)
-    return response.json()
+    try:
+        headers = {'Accept': 'application/json'}
+        response = requests.get(url, headers=headers)
+        return response.json()
+    except requests.exceptions.RequestException as e:
+        # Handle any network-related errors
+        print(f"Network error occurred: {e}")
+        logger.error(f'make_api_call() - Network error occurred: {e}')
+        return None
+    except ValueError as e:
+        # Handle JSON decoding error
+        print(f"Error decoding JSON response: {e}")
+        logger.error(f'make_api_call() - Error decoding JSON response: {e}')
+        return None
+    except Exception as e:
+        print(f'make_api_call() - Exception : {e}')
+        logger.error(f'make_api_call() - Exception : {e}')
+
 
 def insert_data(data, isin_number, security_name, exchange):
     #print(data)
@@ -117,14 +132,17 @@ def insert_data(data, isin_number, security_name, exchange):
         session.execute(insert_stmt)
         session.commit()
     except SQLAlchemyError as e:
-        print(f'1. Except: SecurityCode={isin_number} Errored-Out: {e}\n\n')
+        print(f'insert_data() - 1. Except: SecurityCode={isin_number} Errored-Out: {e}\n\n')
+        logger.error(f'insert_data() - Except(1): SecurityCode={isin_number} Errored-Out: {e}\n')
         error = str(e)
 
     except Exception as e:
-        print("2. Except: SecurityCode={isin_number} Errored-Out:", e)
+        print("insert_data() - 2. Except: SecurityCode={isin_number} Errored-Out:", e)
+        logger.error(f'insert_data() - Except(2): SecurityCode={isin_number} Errored-Out: {e}')
 
     finally:
         print(f'Finally Completed: SecurityCode={isin_number} Loaded Successfuly.\n\n')
+        logger.info(f'insert_data() - Finally Completed: SecurityCode={isin_number} Loaded Successfuly.\n')
         session.close()
 
 
