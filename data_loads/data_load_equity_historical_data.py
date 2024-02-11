@@ -98,7 +98,7 @@ def make_api_call(url):
     return response.json()
 
 def insert_data(data, isin_number, security_name, exchange):
-    print(data)
+    --print(data)
     df = pd.DataFrame(data)
     df.columns = ['trade_date', 'open', 'high', 'low', 'close', 'volume', 'open_interest']
     df['exchange'] = exchange
@@ -117,14 +117,14 @@ def insert_data(data, isin_number, security_name, exchange):
         session.execute(insert_stmt)
         session.commit()
     except SQLAlchemyError as e:
-        print(f'Except: SecurityCode={isin_number} Errored-Out: {e}\n\n')
+        print(f'1. Except: SecurityCode={isin_number} Errored-Out: {e}\n\n')
         error = str(e)
 
     except Exception as e:
-        print("Error inserting data into the database:", e)
+        print("2. Except: SecurityCode={isin_number} Errored-Out:", e)
 
     finally:
-        print(f'Finally: SecurityCode={isin_number} Loaded Successfuly.\n\n')
+        print(f'Finally Completed: SecurityCode={isin_number} Loaded Successfuly.\n\n')
         session.close()
 
 
