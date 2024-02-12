@@ -4,6 +4,7 @@
     <list default="true" id="6306b164-a51a-4a56-91e2-cf2d8595bc4a" name="Changes" comment="commit">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/data_loads/data_load_equity_daily.py" beforeDir="false" afterPath="$PROJECT_DIR$/data_loads/data_load_equity_daily.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/sql/sql_generate_isin_str.sql" beforeDir="false" afterPath="$PROJECT_DIR$/sql/sql_generate_isin_str.sql" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -492,7 +493,14 @@
       <option name="project" value="LOCAL" />
       <updated>1707762873414</updated>
     </task>
-    <option name="localTasksCounter" value="40" />
+    <task id="LOCAL-00040" summary="commit">
+      <created>1707762940127</created>
+      <option name="number" value="00040" />
+      <option name="presentableId" value="LOCAL-00040" />
+      <option name="project" value="LOCAL" />
+      <updated>1707762940127</updated>
+    </task>
+    <option name="localTasksCounter" value="41" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">

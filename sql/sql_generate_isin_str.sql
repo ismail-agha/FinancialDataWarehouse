@@ -36,7 +36,7 @@ SELECT
     STRING_AGG(isin_numbers, ',') AS isin_numbers
 FROM
     grouped_data
-WHERE exchange='NSE' -- to be removed
+/*WHERE exchange='NSE'*/ -- to be removed
 GROUP BY
     exchange, cnt,
     group_number

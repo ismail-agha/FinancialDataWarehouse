@@ -117,6 +117,8 @@ def api_get_data(upstox_token, isin_df):
 
 def make_api_call(url, headers):
     #print(f'URL = {url} | headers = {headers}')
+    logger.info(f'URL = {url} \n')
+
     response = requests.get(url, headers=headers)
     return response.json()
 
@@ -154,5 +156,5 @@ if __name__ == "__main__":
 
     main()
 
-    logger.info(f'Start time: {pd.Timestamp.today()}\n')
+    logger.info(f'End time: {pd.Timestamp.today()}\n')
     print(f'End time: {pd.Timestamp.today()}')
