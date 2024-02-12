@@ -116,7 +116,7 @@ def api_get_data(upstox_token, isin_df):
 
 
 def make_api_call(url, headers):
-    print(f'URL = {url} | headers = {headers}')
+    #print(f'URL = {url} | headers = {headers}')
     response = requests.get(url, headers=headers)
     return response.json()
 
@@ -126,7 +126,7 @@ def insert_data(data):
 
     records = data.to_dict(orient='records')
 
-    print(f'insertdata = {records}')
+    #print(f'insertdata = {records}')
 
     # Create the insert statement
     insert_stmt = pg_insert(TABLE_MODEL_EQUITY_HISTORICAL_DATA).values(records)
