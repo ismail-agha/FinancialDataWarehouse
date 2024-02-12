@@ -16,7 +16,7 @@ headers = {
 }
 
 data = {
-    'code': '5Rqqhv',
+    'code': 'OSiFeB',
     'client_id': '9cf11b90-77b8-432d-a41c-0e5e425dc285',
     'client_secret': 'pzws0rr44o',
     'redirect_uri': 'http://127.0.0.1',
