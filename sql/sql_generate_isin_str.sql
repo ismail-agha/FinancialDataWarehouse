@@ -12,7 +12,7 @@ WITH numbered_data AS (
     FROM
         sm.equity_list
     WHERE
-        status = 'Active' and isin_number in ('INE00CE01017', 'INE737W01013') -- to be removed
+        status = 'Active' /*and isin_number in ('INE00CE01017', 'INE737W01013')*/ -- to be removed
 )
 , grouped_data AS (
     SELECT
