@@ -69,6 +69,8 @@ def bse():
         #print(df)
         logger.info(f'BSE Equity Dataframe created.')
 
+        print(f'BSE DF Created: {df.head()}')
+
         return df
 
     except subprocess.CalledProcessError as e:
