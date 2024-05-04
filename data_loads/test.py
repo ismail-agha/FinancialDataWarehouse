@@ -51,6 +51,8 @@ from datetime import datetime
 
 # NSE 2
 
+# requests - Works
+
 import requests
 
 url = "https://www.nseindia.com/api/marketStatus"
@@ -70,7 +72,7 @@ headers = {
 }
 
 print(f'Requests Starts for NSE')
-response = requests.get(url, headers=headers)
+response = requests.get(url, headers=headers) #requests.get(url, headers=headers)
 print(f'Requests Ends for NSE = {response}')
 
 if response.status_code == 200:
@@ -78,3 +80,10 @@ if response.status_code == 200:
 else:
     print("Failed to retrieve data. Status code:", response.status_code)
 
+
+import requests
+
+proxy = "44.226.167.102:3128" #"13.234.24.116:1080"
+print(f'\nRequests Starts for NSE Using Proxy')
+response = requests.get(url, headers=headers, proxies={'http': proxy, 'https': proxy})
+print(f'Requests Ends for NSE using Proxy')
