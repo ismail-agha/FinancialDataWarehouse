@@ -51,25 +51,28 @@ else:
 
 # NSE 2
 
-# import subprocess
-# import io
-#
-# # Define the curl command as a list of arguments
-# curl_cmd = [
-#     "curl",
-#     nse_equity_request_params["url"],
-#     "-H", f"User-Agent: {nse_equity_request_params['headers']['User-Agent']}",
-#     "-H", f"Upgrade-Insecure-Requests: {nse_equity_request_params['headers']['Upgrade-Insecure-Requests']}",
-#     "-H", f"sec-ch-ua: {nse_equity_request_params['headers']['sec-ch-ua']}",
-#     "-H", f"sec-ch-ua-mobile: {nse_equity_request_params['headers']['sec-ch-ua-mobile']}",
-#     "-H", f"sec-ch-ua-platform: {nse_equity_request_params['headers']['sec-ch-ua-platform']}"
-# ]
-#
-# # Execute the curl command using subprocess and capture its output
-# output = subprocess.check_output(curl_cmd)
-#
-# # Convert the output bytes to a string and then to a DataFrame
-# df = pd.read_csv(io.StringIO(output.decode()))
-#
-# # Now you can work with the 'df' DataFrame as needed
-# print(df.head())  # Print the first few rows of the DataFrame
+import requests
+
+url = "https://www.nseindia.com/api/marketStatus"
+
+headers = {
+    "accept": "*/*",
+    "accept-language": "en-US,en;q=0.9,la;q=0.8",
+    "priority": "u=1, i",
+    "referer": "https://www.nseindia.com/get-quotes/equity?symbol=SHREECEM",
+    "sec-ch-ua": '"Chromium";v="124", "Google Chrome";v="124", "Not-A.Brand";v="99"',
+    "sec-ch-ua-mobile": "?0",
+    "sec-ch-ua-platform": '"Windows"',
+    "sec-fetch-dest": "empty",
+    "sec-fetch-mode": "cors",
+    "sec-fetch-site": "same-origin",
+    "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36"
+}
+
+response = requests.get(url, headers=headers)
+
+if response.status_code == 200:
+    print(f'nse 2 - {response.json()}')
+else:
+    print("Failed to retrieve data. Status code:", response.status_code)
+
