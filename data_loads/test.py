@@ -34,19 +34,19 @@ from datetime import datetime
 
 # NSE 1
 
-print(f'Requests Starts for NSE')
-#response = requests.get(**nse_equity_request_params)
-response = requests.get(nse_equity_request_params["url"], headers=nse_equity_request_params["headers"])
-print(f'Requests Ends for NSE = {response}')
-# Check if the request was successful (status code 200)
-if response.status_code == 200:
-    # Read the response content (CSV data) into a DataFrame
-    df = pd.read_csv(StringIO(response.text))
-
-    # Now you can work with the 'df' DataFrame as needed
-    print(df.head())  # Print the first few rows of the DataFrame
-else:
-    print("Failed to download the file.")
+# print(f'Requests Starts for NSE')
+# #response = requests.get(**nse_equity_request_params)
+# response = requests.get(nse_equity_request_params["url"], headers=nse_equity_request_params["headers"])
+# print(f'Requests Ends for NSE = {response}')
+# # Check if the request was successful (status code 200)
+# if response.status_code == 200:
+#     # Read the response content (CSV data) into a DataFrame
+#     df = pd.read_csv(StringIO(response.text))
+#
+#     # Now you can work with the 'df' DataFrame as needed
+#     print(df.head())  # Print the first few rows of the DataFrame
+# else:
+#     print("Failed to download the file.")
 
 
 # NSE 2
