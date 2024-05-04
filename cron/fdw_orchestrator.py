@@ -7,6 +7,7 @@ def execute_script(script_path):
         print(f"Error executing {script_path}: {e}")
         exit(1)
 
+
 def main():
     # Execute data_load_equity_list.py
     execute_script("/data_loads/data_load_equity_list.py")
