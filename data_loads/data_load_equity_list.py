@@ -1,68 +1,108 @@
 import os
 import sys
+import subprocess, requests, logging
+from io import StringIO
 
 # Add parent directory to the Python path
 current_dir = os.path.dirname(os.path.abspath(__file__))
 parent_dir = os.path.dirname(current_dir)
 sys.path.append(parent_dir)
 
+from configs.config_urls import curl_cmd_bse_equity, nse_equity_request_params
 import pandas as pd
 from db.database_and_models import TABLE_MODEL_EQUITY_LIST, session
 import json
 from sqlalchemy import text
 import concurrent.futures
+from datetime import datetime
+
+# Create a timestamp string
+timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+
+# Configure the logging settings
+log_filename = f"../logs/data_load_equity_daily_{timestamp}.log"
+
+logging.basicConfig(
+    level=logging.DEBUG,
+    format='%(asctime)s - %(levelname)s - %(message)s',
+    filename=log_filename,
+    filemode='w'
+)
+
+# Create a logger object
+logger = logging.getLogger(__name__)
+logging.getLogger("requests").setLevel(logging.WARNING)
+logging.getLogger("urllib3").setLevel(logging.WARNING)
 
 def bse():
-    file_path = '../files/BSE All-Securities.json'
+    try:
+        # Execute the curl command and capture the output
+        output  = subprocess.check_output(curl_cmd_bse_equity)
 
+        # Convert the JSON string to a Python dictionary
+        data = json.loads(output)
 
-    # Open the file and load the JSON data
-    with open(file_path, 'r') as file:
-        data = json.load(
-            file)  # json.load() - to load JSON data from a file-like object (or any object with a read() method)
+        for item in data:
+            del item["NSURL"]  # drop "NSURL" column
 
-    for item in data:
-        del item["NSURL"]  # drop "NSURL" column
+        column_mapping = {
+            "SCRIP_CD": "security_code",
+            "Scrip_Name": "security_name",
+            "Status": "status",
+            "GROUP": "security_group",
+            "FACE_VALUE": "face_value",
+            "ISIN_NUMBER": "isin_number",
+            "INDUSTRY": "industry",
+            "scrip_id": "security_id",
+            "Segment": "segment",
+            "Issuer_Name": "issuer_name",
+            "Mktcap": "market_capitalisation_in_crore"
+        }
 
-    column_mapping = {
-        "SCRIP_CD": "security_code",
-        "Scrip_Name": "security_name",
-        "Status": "status",
-        "GROUP": "security_group",
-        "FACE_VALUE": "face_value",
-        "ISIN_NUMBER": "isin_number",
-        "INDUSTRY": "industry",
-        "scrip_id": "security_id",
-        "Segment": "segment",
-        "Issuer_Name": "issuer_name",
-        "Mktcap": "market_capitalisation_in_crore"
-    }
+        # Create a DataFrame from the JSON data with renamed columns
+        df = pd.DataFrame(data, columns=column_mapping.keys())
+        df.rename(columns=column_mapping, inplace=True)
 
-    # Create a DataFrame from the JSON data with renamed columns
-    df = pd.DataFrame(data, columns=column_mapping.keys())
-    df.rename(columns=column_mapping, inplace=True)
+        df['face_value'] = pd.to_numeric(df['face_value'], errors='coerce').fillna(0).astype('int')
+        df['market_capitalisation_in_crore'] = pd.to_numeric(df['market_capitalisation_in_crore'], errors='coerce').fillna(0).astype('float')
 
-    df['face_value'] = pd.to_numeric(df['face_value'], errors='coerce').fillna(0).astype('int')
-    df['market_capitalisation_in_crore'] = pd.to_numeric(df['market_capitalisation_in_crore'], errors='coerce').fillna(0).astype('float')
+        #print(df)
+        logger.info(f'BSE Equity Dataframe created.')
 
-    return df
+        return df
+
+    except subprocess.CalledProcessError as e:
+        print(f"Error executing curl command for BSE: {e}")
+        logger.error(f'Error executing curl command for BSE: {e}')
 
 def nse():
-    df = pd.read_csv('../files/NSE_EQUITY_L.csv')
-    df = df.loc[:, [' ISIN NUMBER', 'SYMBOL', 'NAME OF COMPANY', ' FACE VALUE']]
-    df[' FACE VALUE'] = pd.to_numeric(df[' FACE VALUE'], errors='coerce').fillna(0).astype('int')
+    # Send GET request to download the CSV file
+    response = requests.get(**nse_equity_request_params)
 
-    column_mapping = {
-        "SYMBOL": "security_code",
-        "NAME OF COMPANY": "issuer_name",
-        " FACE VALUE": "face_value",
-        " ISIN NUMBER": "isin_number"
-    }
-    df['status'] = 'Active'
+    # Check if the request was successful (status code 200)
+    if response.status_code == 200:
+        # Read the response content (CSV data) into a DataFrame
+        df = pd.read_csv(StringIO(response.text))
 
-    df.rename(columns=column_mapping, inplace=True)
+        # Now you can work with the 'df' DataFrame as needed
+        #print(df.head())  # Print the first few rows of the DataFrame
 
-    return df
+        df = df.loc[:, [' ISIN NUMBER', 'SYMBOL', 'NAME OF COMPANY', ' FACE VALUE']]
+        df[' FACE VALUE'] = pd.to_numeric(df[' FACE VALUE'], errors='coerce').fillna(0).astype('int')
+
+        column_mapping = {
+            "SYMBOL": "security_code",
+            "NAME OF COMPANY": "issuer_name",
+            " FACE VALUE": "face_value",
+            " ISIN NUMBER": "isin_number"
+        }
+        df['status'] = 'Active'
+
+        df.rename(columns=column_mapping, inplace=True)
+
+        return df
+    else:
+        print("Failed to download the file.")
 
 
 def merge_bse_nse(df_bse, df_nse):
@@ -127,8 +167,6 @@ def db_insert(df_final):
 
     session.close()
 
-
-
 def main():
     # Create a ThreadPoolExecutor with maximum workers as 2
     with concurrent.futures.ThreadPoolExecutor(max_workers=2) as executor:
@@ -142,9 +180,10 @@ def main():
         df_bse = future_bse.result()
         df_nse = future_nse.result()
 
-
     df_final = merge_bse_nse(df_bse, df_nse)
-    #print(df_final[df_final['isin_number'] == 'INE117A01022'].to_string())
+
+    #print(df_final.to_string())
+
     db_insert(df_final)
 
 if __name__ == "__main__":
