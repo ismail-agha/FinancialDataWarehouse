@@ -71,14 +71,14 @@ headers = {
     "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36"
 }
 
-print(f'Requests Starts for NSE')
-response = requests.get(url, headers=headers) #requests.get(url, headers=headers)
-print(f'Requests Ends for NSE = {response}')
-
-if response.status_code == 200:
-    print(f'nse 2 - {response.json()}')
-else:
-    print("Failed to retrieve data. Status code:", response.status_code)
+# print(f'Requests Starts for NSE')
+# response = requests.get(url, headers=headers) #requests.get(url, headers=headers)
+# print(f'Requests Ends for NSE = {response}')
+#
+# if response.status_code == 200:
+#     print(f'nse 2 - {response.json()}')
+# else:
+#     print("Failed to retrieve data. Status code:", response.status_code)
 
 
 import requests
