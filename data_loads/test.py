@@ -87,3 +87,8 @@ proxy = "44.226.167.102:3128" #"13.234.24.116:1080"
 print(f'\nRequests Starts for NSE Using Proxy')
 response = requests.get(url, headers=headers, proxies={'http': proxy, 'https': proxy})
 print(f'Requests Ends for NSE using Proxy')
+
+if response.status_code == 200:
+    print(f'NSE Proxy - {response.json()}')
+else:
+    print("Failed to retrieve data. Status code:", response.status_code)
