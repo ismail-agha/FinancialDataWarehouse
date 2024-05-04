@@ -17,17 +17,30 @@ import concurrent.futures
 from datetime import datetime
 
 
-try:
-    # Execute the curl command and capture the output
-    print(f'Subprocess Starts for BSE')
-    output = subprocess.check_output(curl_cmd_bse_equity)
-    print(f'Subprocess Ends for BSE')
-    # Convert the JSON string to a Python dictionary
-    data = json.loads(output)
+# try:
+#     # Execute the curl command and capture the output
+#     print(f'Subprocess Starts for BSE')
+#     output = subprocess.check_output(curl_cmd_bse_equity)
+#     print(f'Subprocess Ends for BSE')
+#     # Convert the JSON string to a Python dictionary
+#     data = json.loads(output)
+#
+#     print(f'BSE Data = {data}')
+#
+#
+#
+# except subprocess.CalledProcessError as e:
+#     print(f"Error executing curl command for BSE: {e}")
 
-    print(f'BSE Data = {data}')
+print(f'Requests Starts for NSE')
+response = requests.get(**nse_equity_request_params)
+print(f'Requests Ends for NSE = {response}')
+# Check if the request was successful (status code 200)
+if response.status_code == 200:
+    # Read the response content (CSV data) into a DataFrame
+    df = pd.read_csv(StringIO(response.text))
 
-
-
-except subprocess.CalledProcessError as e:
-    print(f"Error executing curl command for BSE: {e}")
+    # Now you can work with the 'df' DataFrame as needed
+    print(df.head())  # Print the first few rows of the DataFrame
+else:
+    print("Failed to download the file.")
