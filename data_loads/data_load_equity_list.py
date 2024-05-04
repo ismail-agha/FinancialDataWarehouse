@@ -78,6 +78,15 @@ def bse():
         logger.error(f'Error executing curl command for BSE: {e}')
 
 def nse():
+    # Define column names
+    columns = ["security_code", "issuer_name", "face_value", "isin_number", "status"]
+
+    # Create an empty DataFrame with the specified columns
+    empty_df = pd.DataFrame(columns=columns)
+
+    return empty_df
+
+def nse_xyz():
     # Send GET request to download the CSV file
     response = requests.get(**nse_equity_request_params)
 
