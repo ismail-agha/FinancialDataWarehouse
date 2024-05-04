@@ -1,40 +1,33 @@
-from sqlalchemy import create_engine
-from sqlalchemy.exc import SQLAlchemyError
-
-import requests
-from datetime import datetime
-
 import os
 import sys
+import subprocess, requests, logging
+from io import StringIO
 
 # Add parent directory to the Python path
 current_dir = os.path.dirname(os.path.abspath(__file__))
 parent_dir = os.path.dirname(current_dir)
 sys.path.append(parent_dir)
 
-from configs.config_urls import upstox_historical
+from configs.config_urls import curl_cmd_bse_equity, nse_equity_request_params
+import pandas as pd
+from db.database_and_models import TABLE_MODEL_EQUITY_LIST, session
+import json
+from sqlalchemy import text
+import concurrent.futures
+from datetime import datetime
+
 
 try:
-    engine = create_engine('postgresql://finapp_user:12345@localhost:5432/FinanceDB')
-    print('Connection to the database established successfully.')
-except SQLAlchemyError as e:
-    print('Failed to connect to the database:', str(e))
+    # Execute the curl command and capture the output
+    print(f'Subprocess Starts for BSE')
+    output = subprocess.check_output(curl_cmd_bse_equity)
+    print(f'Subprocess Ends for BSE')
+    # Convert the JSON string to a Python dictionary
+    data = json.loads(output)
 
-def make_api_call(url):
-    headers = {'Accept': 'application/json'}
-    response = requests.get(url, headers=headers)
-    return response.json()
-
-
-interval = 'day'
-from_date = '2024-02-08'
-to_date = datetime.now().strftime("%Y-%m-%d")
-data = '' #make_api_call(upstox_historical.format('NSE', 'INE587G01015', interval, to_date, from_date))
-print(data)
+    print(f'BSE Data = {data}')
 
 
-import json
-file_path = '../files/BSE All-Securities_20240210.json'
-# Open the file and load the JSON data
-with open(file_path, 'r') as file:
-    data = json.load(file)
+
+except subprocess.CalledProcessError as e:
+    print(f"Error executing curl command for BSE: {e}")
