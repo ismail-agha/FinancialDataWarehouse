@@ -16,7 +16,7 @@ virtual_env_python = os.path.join(parent_dir, "venv", "bin", "python3")
 def execute_script(script_path):
     try:
         # Path to the script you want to run
-        script_path_a = os.path.join(parent_dir, "test", "abc")
+        script_path_a = os.path.join(parent_dir, f"{script_path}")
 
         print(f'parent_dir = {parent_dir}')
         print(f'virtual_env_python = {virtual_env_python}')
