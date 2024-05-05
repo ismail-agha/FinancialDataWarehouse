@@ -18,6 +18,7 @@ def execute_script(script_path):
         # Path to the script you want to run
         script_path = os.path.join(parent_dir, script_path)
 
+        print(f'parent_dir = {parent_dir}')
         print(f'script_path = {script_path}')
 
         #subprocess.run(["/usr/bin/python3", script_path], check=True) /home/ec2-user/FinancialDataWarehouse/venv/bin
