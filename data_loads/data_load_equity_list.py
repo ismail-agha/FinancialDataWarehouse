@@ -67,15 +67,15 @@ def bse():
         df['market_capitalisation_in_crore'] = pd.to_numeric(df['market_capitalisation_in_crore'], errors='coerce').fillna(0).astype('float')
 
         #print(df)
-        logger.info(f'BSE Equity Dataframe created.')
+        logger.info(f'Completed bse() - BSE Equity Dataframe created.')
 
-        print(f'BSE DF Created: {df.head()}')
+        #print(f'BSE DF Created: {df.head()}')
 
         return df
 
     except subprocess.CalledProcessError as e:
         print(f"Error executing curl command for BSE: {e}")
-        logger.error(f'Error executing curl command for BSE: {e}')
+        logger.error(f'Failed bse() - Error : {e}')
 
 def nse():
     # Define column names
@@ -83,6 +83,8 @@ def nse():
 
     # Create an empty DataFrame with the specified columns
     empty_df = pd.DataFrame(columns=columns)
+
+    logger.info(f'Completed - NSE Empty Equity Dataframe created.')
 
     return empty_df
 
@@ -146,6 +148,8 @@ def merge_bse_nse(df_bse, df_nse):
 
     #print(df_final.head(100).to_string())
 
+    logger.info(f'Completed merge_bse_nse() - BSE NSE DF Merging.')
+
     return df_final
 
 def db_insert(df_final):
@@ -159,9 +163,12 @@ def db_insert(df_final):
         session.bulk_insert_mappings(TABLE_MODEL_EQUITY_LIST, data)
         session.commit()
         print("Data inserted successfully.")
+        logger.info(f'Completed db_insert() - Data insertion..')
     except Exception as e:
         session.rollback()
         print("Error inserting data into the database:", e)
+        logger.error(f'Failed db_insert() - Data insertion failed. Error {e}.')
+
 
     # Create Partitions for Table - sm.equity_market_historical_data
     try:
@@ -171,9 +178,11 @@ def db_insert(df_final):
         # Commit the transaction
         session.commit()
         print("Partitions created for sm.equity_market_historical_data.")
+        logger.info(f'Completed db_insert() - Partitions Created.')
 
     except Exception as e:
         print("Error:", e)
+        logger.error(f'Completed db_insert() - Partitions Creation Failed. Error = {e}.')
         session.rollback()
 
     session.close()
