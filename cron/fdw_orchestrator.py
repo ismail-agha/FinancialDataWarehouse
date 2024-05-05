@@ -31,7 +31,7 @@ def execute_script(script_path):
 
 def main():
     # Execute data_load_equity_list.py
-    execute_script("/data_loads/data_load_equity_list.py")
+    execute_script("data_loads/data_load_equity_list.py")
 
     # Execute script2.py upon successful completion of script1.py
     #execute_script("/path/to/script2.py")
