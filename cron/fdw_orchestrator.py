@@ -16,10 +16,10 @@ virtual_env_python = os.path.join(parent_dir, "venv", "bin", "python3")
 def execute_script(script_path):
     try:
         # Path to the script you want to run
-        script_path = os.path.join(parent_dir, script_path)
+        script_path_a = os.path.join(parent_dir, script_path)
 
         print(f'parent_dir = {parent_dir}')
-        print(f'script_path = {script_path}')
+        print(f'script_path = {script_path_a}')
 
         #subprocess.run(["/usr/bin/python3", script_path], check=True) /home/ec2-user/FinancialDataWarehouse/venv/bin
         subprocess.run([virtual_env_python, script_path], check=True)
