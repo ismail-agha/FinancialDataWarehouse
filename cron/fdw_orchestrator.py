@@ -1,9 +1,23 @@
 import subprocess
+import sys
+import os
+
+# Get the absolute path of the directory containing the current script
+script_dir = os.path.dirname(os.path.abspath(__file__))
+
+# Navigate up one level to reach the parent directory
+parent_dir = os.path.abspath(os.path.join(script_dir, os.pardir))
+
+# Assuming virtual environment is located in the 'venv' directory within the parent directory
+virtual_env_python = os.path.join(parent_dir, "venv", "bin", "python3")
+
+# Path to the script you want to run
+script_path = os.path.join(script_dir, "fdw_orchestrator.py")
 
 def execute_script(script_path):
     try:
         #subprocess.run(["/usr/bin/python3", script_path], check=True) /home/ec2-user/FinancialDataWarehouse/venv/bin
-        subprocess.run(["../venv/bin", script_path], check=True)
+        subprocess.run([virtual_env_python, script_path], check=True)
     except subprocess.CalledProcessError as e:
         print(f"Error executing {script_path}: {e}")
         exit(1)
