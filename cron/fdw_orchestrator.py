@@ -3,7 +3,7 @@ import subprocess
 def execute_script(script_path):
     try:
         #subprocess.run(["/usr/bin/python3", script_path], check=True) /home/ec2-user/FinancialDataWarehouse/venv/bin
-        subprocess.run(["/home/ec2-user/FinancialDataWarehouse/venv/bin", script_path], check=True)
+        subprocess.run(["../venv/bin", script_path], check=True)
     except subprocess.CalledProcessError as e:
         print(f"Error executing {script_path}: {e}")
         exit(1)
