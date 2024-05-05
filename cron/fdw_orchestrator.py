@@ -1,6 +1,10 @@
 import subprocess
+import boto3
 import sys
 import os
+
+# Initialize the Boto3 EC2 client
+ec2_client = boto3.client('ec2')
 
 # Get the absolute path of the directory containing the current script
 script_dir = os.path.dirname(os.path.abspath(__file__))
@@ -17,10 +21,6 @@ def execute_script(script_path):
     try:
         # Path to the script you want to run
         script_path = os.path.join(parent_dir, f"{script_path}")
-
-        #print(f'parent_dir = {parent_dir}')
-        #print(f'virtual_env_python = {virtual_env_python}')
-        #print(f'script_path_a = {script_path_a}')
 
         #subprocess.run(["/usr/bin/python3", script_path], check=True) /home/ec2-user/FinancialDataWarehouse/venv/bin
         subprocess.run([virtual_env_python, script_path], check=True)
@@ -42,7 +42,16 @@ def main():
     # Execute script4.py upon successful completion of script3.py
     #execute_script("/path/to/script4.py")
 
-    # Stop EC2 Instance
+
+# Stop EC2 Instance
+def stop_instance(instance_id):
+    try:
+        # Stop the EC2 instance
+        ec2_client.stop_instances(InstanceIds=[instance_id])
+        print(f"Instance {instance_id} stopped successfully.")
+    except Exception as e:
+        print(f"Error stopping instance {instance_id}: {e}")
 
 if __name__ == "__main__":
     main()
+    stop_instance("i-0c63c775026f5c981")
