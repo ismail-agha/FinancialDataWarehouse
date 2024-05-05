@@ -20,7 +20,7 @@ from datetime import datetime
 timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
 
 # Configure the logging settings
-log_filename = f"../logs/data_load_equity_daily_{timestamp}.log"
+log_filename = f"../logs/data_load_equity_list_{timestamp}.log"
 
 logging.basicConfig(
     level=logging.DEBUG,
