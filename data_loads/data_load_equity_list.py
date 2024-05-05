@@ -19,11 +19,8 @@ from datetime import datetime
 # Create a timestamp string
 timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
 
-print(f'parent_dir = {parent_dir}')
 
 # Configure the logging settings
-#log_filename = f"../logs/data_load_equity_list_{timestamp}.log"
-
 log_filename = os.path.join(parent_dir, f"logs/data_load_equity_list_{timestamp}.log")
 
 logging.basicConfig(
