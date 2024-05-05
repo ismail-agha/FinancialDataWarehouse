@@ -163,7 +163,7 @@ def db_insert(df_final):
         session.bulk_insert_mappings(TABLE_MODEL_EQUITY_LIST, data)
         session.commit()
         print("Data inserted successfully.")
-        logger.info(f'Completed db_insert() - Data insertion..')
+        logger.info(f'Completed db_insert() - Data inserted.')
     except Exception as e:
         session.rollback()
         print("Error inserting data into the database:", e)
