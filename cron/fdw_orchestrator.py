@@ -4,7 +4,7 @@ import sys
 import os
 
 # Initialize the Boto3 EC2 client
-ec2_client = boto3.client('ec2')
+ec2_client = boto3.client('ec2', region_name='ap-south-1')
 
 # Get the absolute path of the directory containing the current script
 script_dir = os.path.dirname(os.path.abspath(__file__))
