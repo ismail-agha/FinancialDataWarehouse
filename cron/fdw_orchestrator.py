@@ -42,16 +42,22 @@ def execute_script(script_path):
     except subprocess.CalledProcessError as e:
         print(f"Error executing {script_path}: {e}")
         custom_logging(logger, 'ERROR', f"Error executing {script_path}: {e}")
-        exit(1)
+        raise  # Reraise the exception so it can be caught in the main() function
 
 
 def main():
-    # Execute data_load_equity_list.py
-    execute_script("data_loads/data_load_equity_list.py")
+    try:
+        # Execute data_load_equity_list.py
+        execute_script("data_loads/data_load_equity_list.py")
 
-    # Execute script2.py upon successful completion of script1.py
-    #execute_script("/path/to/script2.py")
+        # Execute script2.py upon successful completion of script1.py
+        #execute_script("/path/to/script2.py")
 
+    except Exception as e:
+        print(f"Error: {e}")
+        custom_logging(logger, 'ERROR', f"Error main(): {e}")
+        stop_instance("i-0c63c775026f5c981")
+        exit(1)
 
 # Stop EC2 Instance
 def stop_instance(instance_id):
