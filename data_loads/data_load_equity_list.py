@@ -8,6 +8,7 @@ current_dir = os.path.dirname(os.path.abspath(__file__))
 parent_dir = os.path.dirname(current_dir)
 sys.path.append(parent_dir)
 
+import boto3
 from configs.config_urls import curl_cmd_bse_equity, nse_equity_request_params
 import pandas as pd
 from db.database_and_models import TABLE_MODEL_EQUITY_LIST, session
@@ -16,23 +17,29 @@ from sqlalchemy import text
 import concurrent.futures
 from datetime import datetime
 
+from generic.custom_logging_script import setup_logger, custom_logging
+
+# ---------
+# Custom Logger
+# ---------
+# Define the script name here
+script_name = os.path.basename(__file__).split('.')[0]
+
+# Initialize the logger with the script name
+logger = setup_logger(script_name)
+
 # Create a timestamp string
 timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+date_yyyymmdd = datetime.now().strftime("%Y%m%d")
 
-# Configure the logging settings
-log_filename = os.path.join(parent_dir, f"logs/data_load_equity_list_{timestamp}.log")
+# ---------
+# AWS S3
+# ---------
+# Initialize the S3 client
+s3_client = boto3.client('s3')
 
-logging.basicConfig(
-    level=logging.DEBUG,
-    format='%(asctime)s - %(levelname)s - %(message)s',
-    filename=log_filename,
-    filemode='w'
-)
-
-# Create a logger object
-logger = logging.getLogger(__name__)
-logging.getLogger("requests").setLevel(logging.WARNING)
-logging.getLogger("urllib3").setLevel(logging.WARNING)
+# Define the bucket name and file key
+bucket_name = 's3.financial.data.warehouse'
 
 def bse():
     try:
@@ -67,7 +74,7 @@ def bse():
         df['market_capitalisation_in_crore'] = pd.to_numeric(df['market_capitalisation_in_crore'], errors='coerce').fillna(0).astype('float')
 
         #print(df)
-        logger.info(f'Completed bse() - BSE Equity Dataframe created.')
+        custom_logging(logger, 'INFO', f'Completefd bse() - BSE Equity Dataframe created.')
 
         #print(f'BSE DF Created: {df.head()}')
 
@@ -75,9 +82,9 @@ def bse():
 
     except subprocess.CalledProcessError as e:
         print(f"Error executing curl command for BSE: {e}")
-        logger.error(f'Failed bse() - Error : {e}')
+        custom_logging(logger, 'ERROR', f'Failed bse() - Error : {e}')
 
-def nse():
+def nse_empty():
     # Define column names
     columns = ["security_code", "issuer_name", "face_value", "isin_number", "status"]
 
@@ -88,34 +95,45 @@ def nse():
 
     return empty_df
 
-def nse_xyz():
-    # Send GET request to download the CSV file
-    response = requests.get(**nse_equity_request_params)
+def nse():
+    nse_equity_file = f'Inbound/NSE_EQUITY_L_{date_yyyymmdd}.csv'
 
-    # Check if the request was successful (status code 200)
-    if response.status_code == 200:
-        # Read the response content (CSV data) into a DataFrame
-        df = pd.read_csv(StringIO(response.text))
+    try:
+        # Get the object from S3
+        response = s3_client.get_object(Bucket=bucket_name, Key=nse_equity_file)
 
-        # Now you can work with the 'df' DataFrame as needed
-        #print(df.head())  # Print the first few rows of the DataFrame
+        # Read the file contents
+        file_content = response['Body'].read().decode('utf-8')
 
-        df = df.loc[:, [' ISIN NUMBER', 'SYMBOL', 'NAME OF COMPANY', ' FACE VALUE']]
-        df[' FACE VALUE'] = pd.to_numeric(df[' FACE VALUE'], errors='coerce').fillna(0).astype('int')
+        # Read CSV into DataFrame
+        nse_df = pd.read_csv(StringIO(file_content))
 
+        # Rename columns
         column_mapping = {
             "SYMBOL": "security_code",
             "NAME OF COMPANY": "issuer_name",
             " FACE VALUE": "face_value",
             " ISIN NUMBER": "isin_number"
         }
-        df['status'] = 'Active'
+        nse_df.rename(columns=column_mapping, inplace=True)
 
-        df.rename(columns=column_mapping, inplace=True)
+        # Select relevant columns
+        nse_df = nse_df.loc[:, ['isin_number', 'security_code', 'issuer_name', 'face_value']]
 
-        return df
-    else:
-        print("Failed to download the file.")
+        # Convert 'face_value' column to numeric
+        nse_df['face_value'] = pd.to_numeric(nse_df['face_value'], errors='coerce').fillna(0).astype('int')
+
+        # Add 'status' column
+        nse_df['status'] = 'Active'
+
+        custom_logging(logger, 'INFO', f'Completed nse() - NSE Equity Dataframe created.')
+
+    except Exception as e:
+        print(f"Error reading file from S3: {e}")
+        custom_logging(logger, 'ERROR', f'Failed nse() - Error : {e}')
+        nse_df = pd.DataFrame(columns=['isin_number', 'security_code', 'issuer_name', 'face_value', 'status'])
+
+    return nse_df
 
 
 def merge_bse_nse(df_bse, df_nse):
@@ -148,7 +166,7 @@ def merge_bse_nse(df_bse, df_nse):
 
     #print(df_final.head(100).to_string())
 
-    logger.info(f'Completed merge_bse_nse() - BSE NSE DF Merging.')
+    custom_logging(logger, 'INFO', f'Completed merge_bse_nse() - BSE NSE DF Merged.')
 
     return df_final
 
@@ -163,11 +181,11 @@ def db_insert(df_final):
         session.bulk_insert_mappings(TABLE_MODEL_EQUITY_LIST, data)
         session.commit()
         print("Data inserted successfully.")
-        logger.info(f'Completed db_insert() - Data inserted.')
+        custom_logging(logger, 'INFO', f'Completed db_insert() - Data inserted.')
     except Exception as e:
         session.rollback()
         print("Error inserting data into the database:", e)
-        logger.error(f'Failed db_insert() - Data insertion failed. Error {e}.')
+        custom_logging(logger, 'ERROR', f'Failed db_insert() - Data insertion failed. Error {e}.')
 
 
     # Create Partitions for Table - sm.equity_market_historical_data
@@ -178,11 +196,11 @@ def db_insert(df_final):
         # Commit the transaction
         session.commit()
         print("Partitions created for sm.equity_market_historical_data.")
-        logger.info(f'Completed db_insert() - Partitions Created.')
+        custom_logging(logger, 'INFO', f'Completed db_insert() - Partitions Created.')
 
     except Exception as e:
         print("Error:", e)
-        logger.error(f'Completed db_insert() - Partitions Creation Failed. Error = {e}.')
+        custom_logging(logger, 'ERROR', f'Completed db_insert() - Partitions Creation Failed. Error = {e}.')
         session.rollback()
 
     session.close()
@@ -200,6 +218,7 @@ def main():
         df_bse = future_bse.result()
         df_nse = future_nse.result()
 
+    #print(df_bse.head()) print(df_nse.head())
     df_final = merge_bse_nse(df_bse, df_nse)
 
     #print(df_final.to_string())
@@ -208,5 +227,7 @@ def main():
 
 if __name__ == "__main__":
     print(f'Start time: {pd.Timestamp.today()}')
+    custom_logging(logger, 'INFO', f'Start time: {pd.Timestamp.today()}')
     main()
+    custom_logging(logger, 'INFO', f'End time: {pd.Timestamp.today()}')
     print(f'End time: {pd.Timestamp.today()}')
