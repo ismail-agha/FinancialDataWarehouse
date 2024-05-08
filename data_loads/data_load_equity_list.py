@@ -87,7 +87,7 @@ def nse_empty():
     return empty_df
 
 def nse():
-    nse_equity_file = f'Inbound/NSE_EQUITY_L_{date_yyyymmdd}.csv1'
+    nse_equity_file = f'Inbound/NSE_EQUITY_L_{date_yyyymmdd}.csv'
 
     try:
         # Get the object from S3
