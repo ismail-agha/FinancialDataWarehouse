@@ -48,8 +48,8 @@ def execute_script(script_path):
 
         custom_logging(logger, 'INFO', f'Completed {script_path}')
     except subprocess.CalledProcessError as e:
-        print(f"Error executing {script_path}: {e}")
-        custom_logging(logger, 'ERROR', f"Error executing {script_path}: {e}")
+        #print(f"Error executing {script_path}: {e}")
+        #custom_logging(logger, 'ERROR', f"Error executing {script_path}: {e}")
         raise  # Reraise the exception so it can be caught in the main() function
 
 
