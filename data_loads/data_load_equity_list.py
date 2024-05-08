@@ -121,7 +121,7 @@ def nse():
 
     except Exception as e:
         print(f"Failed nse() - Error : {e}")
-        custom_logging(logger, 'ERROR', f'Failed nse() - Error : {e}')
+        custom_logging(logger, 'ERROR', f'Failed nse({nse_equity_file}) - Error : {e}')
         exit(1)
         nse_df = pd.DataFrame(columns=['isin_number', 'security_code', 'issuer_name', 'face_value', 'status'])
 
