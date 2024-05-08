@@ -13,6 +13,3 @@ s3_client = boto3.client('s3')
 # Define the bucket name and file key
 bucket_name = 's3.financial.data.warehouse'
 
-
-
-
