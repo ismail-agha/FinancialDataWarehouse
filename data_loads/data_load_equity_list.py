@@ -8,7 +8,7 @@ current_dir = os.path.dirname(os.path.abspath(__file__))
 parent_dir = os.path.dirname(current_dir)
 sys.path.append(parent_dir)
 
-import boto3
+from configs.config import s3_client, bucket_name
 from configs.config_urls import curl_cmd_bse_equity, nse_equity_request_params
 import pandas as pd
 from db.database_and_models import TABLE_MODEL_EQUITY_LIST, session
@@ -16,7 +16,6 @@ import json
 from sqlalchemy import text
 import concurrent.futures
 from datetime import datetime
-
 from generic.custom_logging_script import setup_logger, custom_logging
 
 # ---------
@@ -31,15 +30,6 @@ logger = setup_logger(script_name)
 # Create a timestamp string
 timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
 date_yyyymmdd = datetime.now().strftime("%Y%m%d")
-
-# ---------
-# AWS S3
-# ---------
-# Initialize the S3 client
-s3_client = boto3.client('s3')
-
-# Define the bucket name and file key
-bucket_name = 's3.financial.data.warehouse'
 
 def bse():
     try:
