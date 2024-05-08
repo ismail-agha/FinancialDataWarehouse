@@ -74,6 +74,10 @@ def bse():
         print(f"Failed bse() - Error : {e}")
         custom_logging(logger, 'ERROR', f'Failed bse() - Error : {e}')
         exit(1)
+    except Exception as e:
+        print(f"Failed bse() - Error : {e}")
+        custom_logging(logger, 'ERROR', f'Failed bse() - Error : {e}')
+        exit(1)
 
 def nse_empty():
     # Define column names
