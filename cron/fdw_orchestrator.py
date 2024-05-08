@@ -26,7 +26,6 @@ parent_dir = os.path.abspath(os.path.join(script_dir, os.pardir))
 # Assuming virtual environment is located in the 'venv' directory within the parent directory
 virtual_env_python = os.path.join(parent_dir, "venv", "bin", "python3")
 
-
 # Stop EC2 Instance
 def stop_instance(instance_id):
     try:
