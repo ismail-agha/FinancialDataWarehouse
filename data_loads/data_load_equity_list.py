@@ -70,7 +70,7 @@ def bse():
         df = pd.DataFrame(data, columns=column_mapping.keys())
         df.rename(columns=column_mapping, inplace=True)
 
-        df['face_value'] = pd.to_numeric(df['face_valuea'], errors='coerce').fillna(0).astype('int')
+        df['face_value'] = pd.to_numeric(df['face_valueaa'], errors='coerce').fillna(0).astype('int')
         df['market_capitalisation_in_crore'] = pd.to_numeric(df['market_capitalisation_in_crore'], errors='coerce').fillna(0).astype('float')
 
         #print(df)
