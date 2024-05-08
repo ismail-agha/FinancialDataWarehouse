@@ -42,6 +42,11 @@ upstox_base_url = 'https://api.upstox.com/v2/'
 
 url_upstox_token = upstox_base_url + 'login/authorization/token'
 
+headers_upstox_token = {
+    'accept': 'application/json',
+    'Content-Type': 'application/x-www-form-urlencoded',
+}
+
 upstox_historical = upstox_base_url + 'historical-candle/{}_EQ%7C{}/{}/{}/{}'
 
 upstox_eq_full_market_quote = upstox_base_url + 'market-quote/quotes?instrument_key={}'

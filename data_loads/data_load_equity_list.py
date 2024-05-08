@@ -70,19 +70,20 @@ def bse():
         df = pd.DataFrame(data, columns=column_mapping.keys())
         df.rename(columns=column_mapping, inplace=True)
 
-        df['face_value'] = pd.to_numeric(df['face_value'], errors='coerce').fillna(0).astype('int')
+        df['face_value'] = pd.to_numeric(df['face_valuea'], errors='coerce').fillna(0).astype('int')
         df['market_capitalisation_in_crore'] = pd.to_numeric(df['market_capitalisation_in_crore'], errors='coerce').fillna(0).astype('float')
 
         #print(df)
-        custom_logging(logger, 'INFO', f'Completefd bse() - BSE Equity Dataframe created.')
+        custom_logging(logger, 'INFO', f'Completef bse() - BSE Equity Dataframe created.')
 
         #print(f'BSE DF Created: {df.head()}')
 
         return df
 
     except subprocess.CalledProcessError as e:
-        print(f"Error executing curl command for BSE: {e}")
+        print(f"Failed bse() - Error : {e}")
         custom_logging(logger, 'ERROR', f'Failed bse() - Error : {e}')
+        exit(1)
 
 def nse_empty():
     # Define column names
@@ -96,7 +97,7 @@ def nse_empty():
     return empty_df
 
 def nse():
-    nse_equity_file = f'Inbound/NSE_EQUITY_L_{date_yyyymmdd}.csv'
+    nse_equity_file = f'Inbound/NSE_EQUITY_L_{date_yyyymmdd}.csv1'
 
     try:
         # Get the object from S3
@@ -129,8 +130,9 @@ def nse():
         custom_logging(logger, 'INFO', f'Completed nse() - NSE Equity Dataframe created.')
 
     except Exception as e:
-        print(f"Error reading file from S3: {e}")
+        print(f"Failed nse() - Error : {e}")
         custom_logging(logger, 'ERROR', f'Failed nse() - Error : {e}')
+        exit(1)
         nse_df = pd.DataFrame(columns=['isin_number', 'security_code', 'issuer_name', 'face_value', 'status'])
 
     return nse_df
