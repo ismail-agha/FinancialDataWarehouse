@@ -60,7 +60,7 @@ def bse():
         df = pd.DataFrame(data, columns=column_mapping.keys())
         df.rename(columns=column_mapping, inplace=True)
 
-        df['face_value'] = pd.to_numeric(df['face_valueaa'], errors='coerce').fillna(0).astype('int')
+        df['face_value'] = pd.to_numeric(df['face_value'], errors='coerce').fillna(0).astype('int')
         df['market_capitalisation_in_crore'] = pd.to_numeric(df['market_capitalisation_in_crore'], errors='coerce').fillna(0).astype('float')
 
         #print(df)
@@ -71,12 +71,12 @@ def bse():
         return df
 
     except subprocess.CalledProcessError as e:
-        print(f"Failed bse() - Error : {e}")
-        custom_logging(logger, 'ERROR', f'Failed bse() - Error : {e}')
+        print(f"Error in bse() - Error : {e}")
+        custom_logging(logger, 'ERROR', f'Error in bse() - Error : {e}')
         exit(1)
     except Exception as e:
-        print(f"Failed bse() - Error : {e}")
-        custom_logging(logger, 'ERROR', f'Failed bse() - Error : {e}')
+        print(f"Error in bse() - Error : {e}")
+        custom_logging(logger, 'ERROR', f'Error in bse() - Error : {e}')
         exit(1)
 
 def nse_empty():
@@ -124,8 +124,8 @@ def nse():
         custom_logging(logger, 'INFO', f'Completed nse() - NSE Equity Dataframe created.')
 
     except Exception as e:
-        print(f"Failed nse() - Error : {e}")
-        custom_logging(logger, 'ERROR', f'Failed nse({nse_equity_file}) - Error : {e}')
+        print(f"Error in nse() - Error : {e}")
+        custom_logging(logger, 'ERROR', f'Error in nse({nse_equity_file}) - Error : {e}')
         exit(1)
         nse_df = pd.DataFrame(columns=['isin_number', 'security_code', 'issuer_name', 'face_value', 'status'])
 
@@ -133,38 +133,43 @@ def nse():
 
 
 def merge_bse_nse(df_bse, df_nse):
-    # Perform full outer join
-    df_final = pd.merge(df_bse, df_nse, on='isin_number', how='outer', suffixes=('_bse', '_nse'))
+    try:
+        # Perform full outer join
+        df_final = pd.merge(df_bse, df_nse, on='isin_number', how='outer', suffixes=('_bse', '_nse'))
 
-    # Set flags based on presence in each dataframe
-    df_final['bse'] = df_final['issuer_name_bse'].notnull()
-    df_final['nse'] = df_final['issuer_name_nse'].notnull()
+        # Set flags based on presence in each dataframe
+        df_final['bse'] = df_final['issuer_name_bse'].notnull()
+        df_final['nse'] = df_final['issuer_name_nse'].notnull()
 
-    # Fill NaN values with appropriate values
-    df_final.fillna({'issuer_name_bse': df_final['issuer_name_nse'], 'issuer_name_nse': df_final['issuer_name_bse']}, inplace=True)
-    df_final.fillna({'face_value_bse': df_final['face_value_nse'], 'face_value_nse': df_final['face_value_bse']}, inplace=True)
-    df_final.fillna({'status_bse': df_final['status_nse'], 'status_nse': df_final['status_bse']}, inplace=True)
-    df_final['market_capitalisation_in_crore'].fillna(0, inplace=True)
+        # Fill NaN values with appropriate values
+        df_final.fillna({'issuer_name_bse': df_final['issuer_name_nse'], 'issuer_name_nse': df_final['issuer_name_bse']}, inplace=True)
+        df_final.fillna({'face_value_bse': df_final['face_value_nse'], 'face_value_nse': df_final['face_value_bse']}, inplace=True)
+        df_final.fillna({'status_bse': df_final['status_nse'], 'status_nse': df_final['status_bse']}, inplace=True)
+        df_final['market_capitalisation_in_crore'].fillna(0, inplace=True)
 
-    #print(df_final.head(50).to_string())
+        #print(df_final.head(50).to_string())
 
-    column_mapping = {
-        "issuer_name_bse": "issuer_name",
-        "face_value_bse": "face_value",
-        "status_bse": "status",
-    }
+        column_mapping = {
+            "issuer_name_bse": "issuer_name",
+            "face_value_bse": "face_value",
+            "status_bse": "status",
+        }
 
-    df_final.rename(columns=column_mapping, inplace=True)
+        df_final.rename(columns=column_mapping, inplace=True)
 
-    df_final['audit_create_date'] = pd.Timestamp.today()
+        df_final['audit_create_date'] = pd.Timestamp.today()
 
-    df_final = df_final[['bse', 'security_code_bse', 'nse', 'security_code_nse', 'issuer_name', 'security_id', 'security_name', 'status', 'security_group', 'face_value', 'isin_number', 'industry', 'market_capitalisation_in_crore', 'audit_create_date']]
+        df_final = df_final[['bse', 'security_code_bse', 'nse', 'security_code_nse', 'issuer_name', 'security_id', 'security_name', 'status', 'security_group', 'face_value', 'isin_number', 'industry', 'market_capitalisation_in_crore', 'audit_create_date']]
 
-    #print(df_final.head(100).to_string())
+        #print(df_final.head(100).to_string())
 
-    custom_logging(logger, 'INFO', f'Completed merge_bse_nse() - BSE NSE DF Merged.')
+        custom_logging(logger, 'INFO', f'Completed merge_bse_nse() - BSE NSE DF Merged.')
 
-    return df_final
+        return df_final
+    except Exception as e:
+        print(f"Error in merge_bse_nse(): {e}")
+        custom_logging(logger, 'ERROR', f'Error in merge_bse_nse(): {e}')
+        exit(1)
 
 def db_insert(df_final):
 
@@ -180,9 +185,10 @@ def db_insert(df_final):
         custom_logging(logger, 'INFO', f'Completed db_insert() - Data inserted.')
     except Exception as e:
         session.rollback()
-        print("Error inserting data into the database:", e)
-        custom_logging(logger, 'ERROR', f'Failed db_insert() - Data insertion failed. Error {e}.')
-
+        print("Error in db_insert(Insert) - Error inserting data into the database:", e)
+        custom_logging(logger, 'ERROR', f'Error in db_insert() - Data insertion failed. Error {e}.')
+        session.close()
+        exit(1)
 
     # Create Partitions for Table - sm.equity_market_historical_data
     try:
@@ -195,9 +201,11 @@ def db_insert(df_final):
         custom_logging(logger, 'INFO', f'Completed db_insert() - Partitions Created.')
 
     except Exception as e:
-        print("Error:", e)
-        custom_logging(logger, 'ERROR', f'Completed db_insert() - Partitions Creation Failed. Error = {e}.')
+        print("Error in db_insert(Partitions):", e)
+        custom_logging(logger, 'ERROR', f'Error in db_insert() - Partitions Creation Failed. Error = {e}.')
         session.rollback()
+        session.close()
+        exit(1)
 
     session.close()
 

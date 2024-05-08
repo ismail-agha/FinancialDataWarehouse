@@ -35,7 +35,7 @@ def stop_instance(instance_id):
         custom_logging(logger, 'INFO', f"Instance {instance_id} stopped successfully.")
     except Exception as e:
         print(f"Error stopping instance {instance_id}: {e}")
-        custom_logging(logger, 'ERROR', f"Error stopping instance {instance_id}: {e}")
+        custom_logging(logger, 'ERROR', f"Error in stopping instance {instance_id}: {e}")
 
 
 def execute_script(script_path):
@@ -64,8 +64,8 @@ def main():
         #execute_script("/path/to/script2.py")
 
     except Exception as e:
-        print(f"Error main(): {e}")
-        custom_logging(logger, 'ERROR', f"Error main(): {e}")
+        print(f"Error in main(): {e}")
+        custom_logging(logger, 'ERROR', f"Error in main(): {e}")
         stop_instance("i-0c63c775026f5c981")
         exit(1)
 
