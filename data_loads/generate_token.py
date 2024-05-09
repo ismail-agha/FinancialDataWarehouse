@@ -6,6 +6,7 @@ current_dir = os.path.dirname(os.path.abspath(__file__))
 parent_dir = os.path.dirname(current_dir)
 sys.path.append(parent_dir)
 
+import json
 import requests
 from configs.config_urls import url_upstox_token, headers_upstox_token
 from configs.config import s3_client, bucket_name
@@ -79,8 +80,8 @@ try:
             exit(1)
     else:
         # Print error message if request was unsuccessful
-        print(f"Error: HTTP {response.status_code} - {response.reason}")
-        custom_logging(logger, 'ERROR', f'Error: HTTP {response.status_code} - {response.reason}')
+        print(f"Error while generating token. Error = {response.status_code} - {response.reason} - {json.loads(response.text)['errors'][0]['message']}")
+        custom_logging(logger, 'ERROR', f"Error while generating token. Error = {response.status_code} - {response.reason} - {json.loads(response.text)['errors'][0]['message']}")
         exit(1)
 
     custom_logging(logger, 'INFO', f'Completed creating token file.')
