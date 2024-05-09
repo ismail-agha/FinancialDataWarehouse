@@ -58,7 +58,9 @@ def main():
         # Execute data_load_equity_list.py
         execute_script("data_loads/data_load_equity_list.py")
 
-        custom_logging(logger, 'INFO', f"Test Script 2.")
+        execute_script("data_loads/generate_token.py")
+
+        #execute_script("data_loads/data_load_equity_daily.py")
 
         # Execute script2.py upon successful completion of script1.py
         #execute_script("/path/to/script2.py")

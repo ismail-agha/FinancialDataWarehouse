@@ -7,32 +7,86 @@ parent_dir = os.path.dirname(current_dir)
 sys.path.append(parent_dir)
 
 import requests
-from configs.config_urls import url_upstox_token
+from configs.config_urls import url_upstox_token, headers_upstox_token
+from configs.config import s3_client, bucket_name
+from datetime import datetime
+from generic.custom_logging_script import setup_logger, custom_logging
 
+# ---------
+# Custom Logger
+# ---------
+# Define the script name here
+script_name = os.path.basename(__file__).split('.')[0]
 
-headers = {
-    'accept': 'application/json',
-    'Content-Type': 'application/x-www-form-urlencoded',
-}
+# Initialize the logger with the script name
+logger = setup_logger(script_name)
+
+date_yyyymmdd = datetime.now().strftime("%Y%m%d")
+
+file_key = f'Inbound/upstox_code_{date_yyyymmdd}.txt'
+
+upstox_code = ''
+try:
+    # Get the object from S3
+    response = s3_client.get_object(Bucket=bucket_name, Key=file_key)
+
+    # Read the file contents
+    upstox_code = response['Body'].read().decode('utf-8')
+
+    # Print or process the file content
+    print(upstox_code)
+    custom_logging(logger, 'INFO', f'Completed reading data from file {file_key}. The code is {upstox_code}')
+
+except Exception as e:
+    print(f"Error reading file from S3: {e}")
+    custom_logging(logger, 'ERROR', f'Error while reading data from file {file_key}. Error = {e}')
+    exit(1)
 
 data = {
-    'code': 'OSiFeB',
+    'code': upstox_code,
     'client_id': '9cf11b90-77b8-432d-a41c-0e5e425dc285',
     'client_secret': 'pzws0rr44o',
     'redirect_uri': 'http://127.0.0.1',
     'grant_type': 'authorization_code',
 }
 
-response = requests.post(url_upstox_token, headers=headers, data=data)
-data = response.json()
-print(response.status_code)
-print(response.json())
+try:
+    # Make the HTTP POST request to retrieve the access token
+    response = requests.post(url_upstox_token, headers=headers_upstox_token, data=data)
 
-#print(f"access_token = {data['access_token']}")
+    # Check if the request was successful (status code 200)
+    if response.status_code == 200:
+        # Parse the JSON response
+        data = response.json()
 
-#return data['access_token']
+        # Print the status code and response JSON for debugging
+        print(f"Status Code: {response.status_code}")
+        print("Response JSON:", data)
 
-# Open the file in write mode ('w')
-with open(file = '../token/token.txt', mode='w') as file:
-    # Write the content to the file
-    file.write(data['access_token'])
+        # Extract the access token from the response
+        access_token = data.get('access_token')
+
+        # Check if access token is present in the response
+        if access_token:
+            print(f"Access Token: {access_token}")
+
+            # Write the access token to a file
+            with open(file='../token/token.txt', mode='w') as file:
+                file.write(access_token)
+        else:
+            print("Access token not found in the response.")
+            custom_logging(logger, 'ERROR', f'Access token not found in the response.')
+            exit(1)
+    else:
+        # Print error message if request was unsuccessful
+        print(f"Error: HTTP {response.status_code} - {response.reason}")
+        custom_logging(logger, 'ERROR', f'Error: HTTP {response.status_code} - {response.reason}')
+        exit(1)
+
+    custom_logging(logger, 'INFO', f'Completed creating token file.')
+except Exception as e:
+    # Handle any exceptions that occur during the execution of the code
+    print(f"An error occurred: {e}")
+    custom_logging(logger, 'ERROR', f'Error while generating token. Error = {e}')
+    exit(1)
+

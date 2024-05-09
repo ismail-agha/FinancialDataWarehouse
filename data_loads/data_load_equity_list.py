@@ -64,7 +64,7 @@ def bse():
         df['market_capitalisation_in_crore'] = pd.to_numeric(df['market_capitalisation_in_crore'], errors='coerce').fillna(0).astype('float')
 
         #print(df)
-        custom_logging(logger, 'INFO', f'Completef bse() - BSE Equity Dataframe created.')
+        custom_logging(logger, 'INFO', f'Completed bse() - BSE Equity Dataframe created.')
 
         #print(f'BSE DF Created: {df.head()}')
 
