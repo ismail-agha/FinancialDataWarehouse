@@ -16,7 +16,7 @@ import json
 from sqlalchemy import text
 import concurrent.futures
 from datetime import datetime
-from generic.custom_logging_script import setup_logger, custom_logging
+from helper.custom_logging_script import setup_logger, custom_logging
 
 # ---------
 # Custom Logger

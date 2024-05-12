@@ -1,5 +1,5 @@
 import subprocess
-import boto3
+import datetime
 import sys
 import os
 
@@ -8,14 +8,13 @@ current_dir = os.path.dirname(os.path.abspath(__file__))
 parent_dir = os.path.dirname(current_dir)
 sys.path.append(parent_dir)
 
-from generic.custom_logging_script import setup_logger, custom_logging
-from configs.config import ec2_client
+from helper.custom_logging_script import setup_logger, custom_logging
+from configs.config import ec2_client, ec2_istance_id, initialize_timestamp
+from helper.custom_generate_email import email
+from helper.helper_identify_holidays import is_holiday
 
 # Define the script name here
 script_name = os.path.basename(__file__).split('.')[0]
-
-# Initialize the logger with the script name
-logger = setup_logger(script_name)
 
 # Get the absolute path of the directory containing the current script
 script_dir = os.path.dirname(os.path.abspath(__file__))
@@ -55,21 +54,36 @@ def execute_script(script_path):
 
 def main():
     try:
-        # Execute generate_token.py
-        execute_script("data_loads/generate_token.py")
+        check_holiday = is_holiday()
+        if not check_holiday.get('is_holiday'):
+            # Execute generate_token.py
+            execute_script("data_loads/generate_token.py")
 
-        # Execute data_load_equity_list.py
-        execute_script("data_loads/data_load_equity_list.py")
+            # Execute data_load_equity_list.py
+            execute_script("data_loads/data_load_equity_list.py")
 
-        #execute_script("data_loads/data_load_equity_daily.py")
+            #execute_script("data_loads/data_load_equity_daily.py")
+        else:
+            custom_logging(logger, 'INFO', f'Holiday Today due to {check_holiday.get("info")}')
+
 
     except Exception as e:
         print(f"Error in main(): {e}")
         custom_logging(logger, 'ERROR', f"Error in main(): {e}")
-        stop_instance("i-0c63c775026f5c981")
+        perform_cleanup()
         exit(1)
 
+def perform_cleanup():
+    stop_instance(ec2_istance_id)
+    email()
 
 if __name__ == "__main__":
+    initialize_timestamp() # For Global variable timestamp
+
+    # Initialize the logger with the script name
+    logger = setup_logger(script_name)
+
+    custom_logging(logger, 'INFO', f'Start time: {datetime.now().strftime("%Y%m%d_%H%M%S")}')
     main()
-    stop_instance("i-0c63c775026f5c981")
+    perform_cleanup()
+    custom_logging(logger, 'INFO', f'End time: {datetime.now().strftime("%Y%m%d_%H%M%S")}')

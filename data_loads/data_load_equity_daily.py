@@ -7,57 +7,59 @@ parent_dir = os.path.dirname(current_dir)
 sys.path.append(parent_dir)
 
 import pandas as pd
-import requests
-import time
+import requests, json
 from datetime import datetime
-import logging
 import concurrent.futures
-import json
 
 from configs.config_urls import upstox_eq_full_market_quote, upstox_headers_market_quote
-
 from db.database_and_models import engine, TABLE_MODEL_EQUITY_HISTORICAL_DATA, session, SQLAlchemyError
 from sqlalchemy.dialects.postgresql import insert as pg_insert
+from helper.custom_logging_script import setup_logger, custom_logging
+
+# ---------
+# Custom Logger
+# ---------
+# Define the script name here
+script_name = os.path.basename(__file__).split('.')[0]
+
+# Initialize the logger with the script name
+logger = setup_logger(script_name)
 
 # Create a timestamp string
 timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
 
-# Configure the logging settings
-log_filename = f"../logs/data_load_equity_daily_{timestamp}.log"
-
-logging.basicConfig(
-    level=logging.DEBUG,
-    format='%(asctime)s - %(levelname)s - %(message)s',
-    filename=log_filename,
-    filemode='w'
-)
-
-# Create a logger object
-logger = logging.getLogger(__name__)
-
-
-def main():
-    isin_df = generate_isin_str('sql_generate_isin_str.sql')
-    upstox_token = get_token()
-    api_get_data(upstox_token, isin_df)
-
-
 def get_token():
-    with open('../token/token.txt', 'r') as file:
-        sql_query = file.read()
-    return sql_query
+    try:
+        with open('../token/token.txt', 'r') as file:
+            token = file.read()
+        custom_logging(logger, 'INFO', f'Completed get_token().')
+        return token
+    except Exception as e:
+        custom_logging(logger, 'ERROR', f'Error in get_token(). Error = {e}.')
+        raise
+
 
 
 def read_sql_file(file_path):
-    with open(file_path, 'r') as file:
-        sql_query = file.read()
-    return sql_query
+    try:
+        with open(file_path, 'r') as file:
+            sql_query = file.read()
+        custom_logging(logger, 'INFO', f'Completed read_sql_file({file_path}).')
+        return sql_query
+    except Exception as e:
+        custom_logging(logger, 'ERROR', f'Error in read_sql_file({file_path}). Error = {e}.')
+        raise
 
 
 def generate_isin_str(sql_file):
-    file_path = '../sql/' + sql_file
-    result_df = pd.read_sql_query(read_sql_file(file_path), engine)
-    return result_df
+    try:
+        file_path = '../sql/' + sql_file
+        result_df = pd.read_sql_query(read_sql_file(file_path), engine)
+        custom_logging(logger, 'INFO', f'Completed generate_isin_str({sql_file}).')
+        return result_df
+    except Exception as e:
+        custom_logging(logger, 'ERROR', f'Error in generate_isin_str({sql_file})). Error = {e}.')
+        raise
 
 
 def api_get_data(upstox_token, isin_df):
@@ -109,18 +111,30 @@ def api_get_data(upstox_token, isin_df):
                     #print(df.to_string())
 
                     insert_data(df)
+                    custom_logging(logger, 'INFO', f'Completed api_get_data().')
 
             except Exception as exc:
                 print(f'API call to {url} failed: {exc}')
-                logger.error(f'ERROR: PI call to {url} failed due to - {exc}')
+                custom_logging(logger, 'ERROR', f'Error in api_get_data(). Error = {e}.')
+                raise
 
 
 def make_api_call(url, headers):
     #print(f'URL = {url} | headers = {headers}')
-    logger.info(f'URL = {url} \n')
+    try:
+        logger.info(f'URL = {url} \n')
+        custom_logging(logger, 'INFO', f'Running make_api_call() for URL = {url}.')
+        response = requests.get(url, headers=headers)
+        if response.status_code == 200:
+            return response.json()
+        else:
+            custom_logging(logger, 'ERROR',
+                           f"Error in make_api_call(). Error = {response.status_code} - {response.reason} - {json.loads(response.text)['errors'][0]['message']}")
 
-    response = requests.get(url, headers=headers)
-    return response.json()
+    except Exception as exc:
+        print(f'API call to {url} failed: {exc}')
+        custom_logging(logger, 'ERROR', f'Error in make_api_call(). URL = {url}. Error = {e}.')
+        raise
 
 
 def insert_data(data):
@@ -140,21 +154,29 @@ def insert_data(data):
     except SQLAlchemyError as e:
         error = str(e)
         print("Error inserting data into the database:", e)
-        logger.error(f'ERROR: insert_data() failed due to - {e}')
+        custom_logging(logger, 'ERROR', f'Error in (1) insert_data(). Error = {e}.')
+        raise
 
     except Exception as e:
         print("Error inserting data into the database:", e)
-        logger.error(f'ERROR: insert_data() failed due to - {e}')
+        custom_logging(logger, 'ERROR', f'Error in (2) insert_data(). Error = {e}.')
+        raise
 
     finally:
+        custom_logging(logger, 'INFO', f'Completed insert_data().')
         session.close()
 
+def main():
+    isin_df = generate_isin_str('sql_generate_isin_str.sql')
+    upstox_token = get_token()
+    api_get_data(upstox_token, isin_df)
 
 if __name__ == "__main__":
-    print(f'Start time: {pd.Timestamp.today()}')
-    logger.info(f'Start time: {pd.Timestamp.today()}\n')
-
-    main()
-
-    logger.info(f'End time: {pd.Timestamp.today()}\n')
-    print(f'End time: {pd.Timestamp.today()}')
+    try:
+        custom_logging(logger, 'INFO', f'Start time: {pd.Timestamp.today()}')
+        main()
+    except Exception as e:
+        custom_logging(logger, 'ERROR', f'End time: {pd.Timestamp.today()}')
+        exit(1)
+    else:
+        custom_logging(logger, 'INFO', f'End time: {pd.Timestamp.today()}')

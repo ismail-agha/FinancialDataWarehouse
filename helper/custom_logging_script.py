@@ -3,6 +3,13 @@ import sys
 import logging
 from datetime import datetime
 
+# Add parent directory to the Python path
+current_dir = os.path.dirname(os.path.abspath(__file__))
+parent_dir = os.path.dirname(current_dir)
+sys.path.append(parent_dir)
+
+from configs.config import get_timestamp
+
 def setup_logger(script_name):
     # Add parent directory to the Python path
     current_dir = os.path.dirname(os.path.abspath(__file__))
@@ -10,10 +17,11 @@ def setup_logger(script_name):
     sys.path.append(parent_dir)
 
     # Create a timestamp string
-    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+    #timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+    #print(f'logger get_timestamp() = {get_timestamp()}')
 
     # Configure the logging settings
-    log_filename = os.path.join(parent_dir, f"logs/{script_name}_{timestamp}.log")
+    log_filename = os.path.join(parent_dir, f"logs/{script_name}_{get_timestamp()}.log")
 
     logging.getLogger("requests").setLevel(logging.WARNING)
     logging.getLogger("urllib3").setLevel(logging.WARNING)

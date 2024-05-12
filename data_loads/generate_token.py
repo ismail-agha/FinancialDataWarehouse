@@ -11,7 +11,7 @@ import requests
 from configs.config_urls import url_upstox_token, headers_upstox_token
 from configs.config import s3_client, bucket_name
 from datetime import datetime
-from generic.custom_logging_script import setup_logger, custom_logging
+from helper.custom_logging_script import setup_logger, custom_logging
 
 # ---------
 # Custom Logger

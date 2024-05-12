@@ -38,8 +38,10 @@ nse_equity_request_params = {
 # UPSTOX
 # ----------------------------------------------------------------------------------------------------------------------
 
+# Base UEL
 upstox_base_url = 'https://api.upstox.com/v2/'
 
+# Token
 url_upstox_token = upstox_base_url + 'login/authorization/token'
 
 headers_upstox_token = {
@@ -47,8 +49,10 @@ headers_upstox_token = {
     'Content-Type': 'application/x-www-form-urlencoded',
 }
 
+# Historical Candle
 upstox_historical = upstox_base_url + 'historical-candle/{}_EQ%7C{}/{}/{}/{}'
 
+# Daily Market Quote
 upstox_eq_full_market_quote = upstox_base_url + 'market-quote/quotes?instrument_key={}'
 
 upstox_headers_market_quote = {
@@ -56,3 +60,5 @@ upstox_headers_market_quote = {
     'Authorization': 'Bearer {}'
 }
 
+# Exchange Holiday List
+url_upstox_market_holidays = upstox_base_url + "market/holidays/"
