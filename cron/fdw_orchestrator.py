@@ -25,6 +25,8 @@ parent_dir = os.path.abspath(os.path.join(script_dir, os.pardir))
 # Assuming virtual environment is located in the 'venv' directory within the parent directory
 virtual_env_python = os.path.join(parent_dir, "venv", "bin", "python3")
 
+process_start_time = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
+
 # Stop EC2 Instance
 def stop_instance(instance_id):
     try:
@@ -73,10 +75,9 @@ def main(process_start_time):
 
 def perform_cleanup():
     stop_instance(ec2_istance_id)
-    email()
+    email(process_start_time)
 
 if __name__ == "__main__":
-    process_start_time = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
 
     # Initialize the logger with the script name
     logger = setup_logger(script_name, process_start_time)

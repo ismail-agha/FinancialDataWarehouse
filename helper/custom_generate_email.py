@@ -11,8 +11,6 @@ current_dir = os.path.dirname(os.path.abspath(__file__))
 parent_dir = os.path.dirname(current_dir)
 sys.path.append(parent_dir)
 
-from configs.config import get_timestamp
-
 def send_email(sender_email, sender_password, receiver_email, subject, body, attachment_paths=None):
     # Create a multipart message
     msg = MIMEMultipart()
@@ -44,26 +42,25 @@ def send_email(sender_email, sender_password, receiver_email, subject, body, att
     # Close the connection
     server.quit()
 
-def email():
+def email(process_start_time):
     # Example usage
     sender_email = 'ismailaga118@gmail.com'
     sender_password = ''
     receiver_email = 'ismailaga.of@gmail.com'
-    subject = f'FDW - Daily Execution Status ({get_timestamp()}) '
+    subject = f'FDW - Daily Execution Status ({process_start_time}) '
 
     # Filter files based on timestamp pattern
     log_directory = os.path.join(parent_dir, f"logs")  # '../logs'
-    timestamp_pattern = get_timestamp()
     attachment_paths = []
     files = os.listdir(log_directory)
 
     # Read fdw_orchestrator file
-    with open(log_directory+f'/fdw_orchestrator_{get_timestamp()}.log', "r") as log_file:
+    with open(log_directory+f'/fdw_orchestrator_{process_start_time}.log', "r") as log_file:
         log_contents = log_file.read()
     body = log_contents + f'\nRegards,\nFDW'
 
     for file in files:
-        match = re.search(timestamp_pattern, file)
+        match = re.search(process_start_time, file)
         if match:
             timestamp = match.group()
             attachment_paths.append(os.path.join(log_directory, file))
