@@ -25,8 +25,6 @@ if len(sys.argv) > 1:
     process_start_time = sys.argv[1]
 logger = setup_logger(script_name, process_start_time)
 
-print(f'generate token - get_timestamp = {get_timestamp()}')
-
 date_yyyymmdd = datetime.now().strftime("%Y%m%d")
 
 file_key = f'Inbound/upstox_code_{date_yyyymmdd}.txt'
