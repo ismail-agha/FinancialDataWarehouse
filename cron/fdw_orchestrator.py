@@ -31,7 +31,7 @@ process_start_time = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
 def stop_instance(instance_id):
     try:
         # Stop the EC2 instance
-        #ec2_client.stop_instances(InstanceIds=[instance_id]) # to be un-commented
+        ec2_client.stop_instances(InstanceIds=[instance_id]) # to be un-commented
         print(f"Instance {instance_id} stopped successfully.")
         custom_logging(logger, 'INFO', f"Instance {instance_id} stopped successfully.")
     except Exception as e:
