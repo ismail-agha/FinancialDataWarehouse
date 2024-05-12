@@ -75,6 +75,7 @@ def main(process_start_time):
 
 def perform_cleanup():
     stop_instance(ec2_istance_id)
+    custom_logging(logger, 'INFO', f'End time: {datetime.datetime.now().strftime("%Y%m%d_%H%M%S")}')
     email(process_start_time)
 
 if __name__ == "__main__":
@@ -85,4 +86,3 @@ if __name__ == "__main__":
     custom_logging(logger, 'INFO', f'Start time: {process_start_time}')
     main(process_start_time)
     perform_cleanup()
-    custom_logging(logger, 'INFO', f'End time: {datetime.datetime.now().strftime("%Y%m%d_%H%M%S")}')
