@@ -83,7 +83,7 @@ if __name__ == "__main__":
     # Initialize the logger with the script name
     logger = setup_logger(script_name)
 
-    custom_logging(logger, 'INFO', f'Start time: {datetime.now().strftime("%Y%m%d_%H%M%S")}')
+    custom_logging(logger, 'INFO', f'Start time: {datetime.datetime.now().strftime("%Y%m%d_%H%M%S")}')
     main()
     perform_cleanup()
-    custom_logging(logger, 'INFO', f'End time: {datetime.now().strftime("%Y%m%d_%H%M%S")}')
+    custom_logging(logger, 'INFO', f'End time: {datetime.datetime.now().strftime("%Y%m%d_%H%M%S")}')
