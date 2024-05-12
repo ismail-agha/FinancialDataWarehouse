@@ -9,7 +9,7 @@ parent_dir = os.path.dirname(current_dir)
 sys.path.append(parent_dir)
 
 from helper.custom_logging_script import setup_logger, custom_logging
-from configs.config import ec2_client, ec2_istance_id, initialize_timestamp, get_timestamp
+from configs.config import ec2_client, ec2_istance_id
 from helper.custom_generate_email import email
 from helper.helper_identify_holidays import is_holiday
 
@@ -37,30 +37,30 @@ def stop_instance(instance_id):
         custom_logging(logger, 'ERROR', f"Error in stopping instance {instance_id}: {e}")
 
 
-def execute_script(script_path):
+def execute_script(script_path, process_start_time):
     try:
         # Path to the script you want to run
         script_path = os.path.join(parent_dir, f"{script_path}")
 
         #subprocess.run(["/usr/bin/python3", script_path], check=True) /home/ec2-user/FinancialDataWarehouse/venv/bin
-        subprocess.run([virtual_env_python, script_path], check=True)
+        subprocess.run([virtual_env_python, script_path, process_start_time], check=True)
 
         custom_logging(logger, 'INFO', f'Completed {script_path}')
     except subprocess.CalledProcessError as e:
         raise  # Reraise the exception so it can be caught in the main() function
 
 
-def main():
+def main(process_start_time):
     try:
         check_holiday = is_holiday()
         if not check_holiday.get('is_holiday'):
             # Execute generate_token.py
-            execute_script("data_loads/generate_token.py")
+            execute_script("data_loads/generate_token.py", process_start_time)
 
             # Execute data_load_equity_list.py
-            execute_script("data_loads/data_load_equity_list.py")
+            execute_script("data_loads/data_load_equity_list.py", process_start_time)
 
-            #execute_script("data_loads/data_load_equity_daily.py")
+            #execute_script("data_loads/data_load_equity_daily.py", process_start_time)
         else:
             custom_logging(logger, 'INFO', f'Holiday Today due to {check_holiday.get("info")}')
 
@@ -76,14 +76,12 @@ def perform_cleanup():
     email()
 
 if __name__ == "__main__":
-    initialize_timestamp() # For Global variable timestamp
+    process_start_time = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
 
     # Initialize the logger with the script name
-    logger = setup_logger(script_name)
+    logger = setup_logger(script_name, process_start_time)
 
-    print(f'main get_timestamp = {get_timestamp()}')
-
-    custom_logging(logger, 'INFO', f'Start time: {datetime.datetime.now().strftime("%Y%m%d_%H%M%S")}')
-    main()
+    custom_logging(logger, 'INFO', f'Start time: {process_start_time}')
+    main(process_start_time)
     perform_cleanup()
     custom_logging(logger, 'INFO', f'End time: {datetime.datetime.now().strftime("%Y%m%d_%H%M%S")}')

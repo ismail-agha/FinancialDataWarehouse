@@ -20,7 +20,10 @@ from helper.custom_logging_script import setup_logger, custom_logging
 script_name = os.path.basename(__file__).split('.')[0]
 
 # Initialize the logger with the script name
-logger = setup_logger(script_name)
+process_start_time = None
+if len(sys.argv) > 1:
+    process_start_time = sys.argv[1]
+logger = setup_logger(script_name, process_start_time)
 
 print(f'generate token - get_timestamp = {get_timestamp()}')
 

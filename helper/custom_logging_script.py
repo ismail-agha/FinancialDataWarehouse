@@ -8,9 +8,7 @@ current_dir = os.path.dirname(os.path.abspath(__file__))
 parent_dir = os.path.dirname(current_dir)
 sys.path.append(parent_dir)
 
-from configs.config import get_timestamp
-
-def setup_logger(script_name):
+def setup_logger(script_name, process_start_time):
     # Add parent directory to the Python path
     current_dir = os.path.dirname(os.path.abspath(__file__))
     parent_dir = os.path.dirname(current_dir)
@@ -21,9 +19,7 @@ def setup_logger(script_name):
     #print(f'logger get_timestamp() = {get_timestamp()}')
 
     # Configure the logging settings
-    log_filename = os.path.join(parent_dir, f"logs/{script_name}_{get_timestamp()}.log")
-
-    print(f'custom logging - get_timestamp = {get_timestamp()}')
+    log_filename = os.path.join(parent_dir, f"logs/{script_name}_{process_start_time}.log")
 
     logging.getLogger("requests").setLevel(logging.WARNING)
     logging.getLogger("urllib3").setLevel(logging.WARNING)
