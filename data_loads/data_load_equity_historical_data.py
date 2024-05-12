@@ -47,7 +47,13 @@ def main():
     from_date = '2024-02-05'
     to_date = datetime.now().strftime("%Y-%m-%d")
 
+    total_rows = len(result_df)
+    logger.info(f'Main - Total Rows (ISIN_NUMBERS) = {total_rows}.\n')
+
     for index, row in result_df.iterrows():
+        logger.info(f'Completion Stats = {index+1}/{total_rows}.\n')
+        print(f'\nCompletion Stats = {index+1}/{total_rows}.')
+
         if row['exg'] == 'both': #INE587G01015
             urls = [upstox_historical.format('BSE', row['isin_number'], interval, to_date, from_date),
                     upstox_historical.format('NSE', row['isin_number'], interval, to_date, from_date)]
