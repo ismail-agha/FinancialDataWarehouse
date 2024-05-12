@@ -49,6 +49,7 @@ def main():
 
     total_rows = len(result_df)
     logger.info(f'Main - Total Rows (ISIN_NUMBERS) = {total_rows}.\n')
+    logger.info(f'Main - Interval={interval} | From_Date={from_date} | To_Date={to_date}.\n')
 
     for index, row in result_df.iterrows():
         logger.info(f'Completion Stats = {index+1}/{total_rows}.\n')
