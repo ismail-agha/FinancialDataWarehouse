@@ -23,6 +23,8 @@ def setup_logger(script_name):
     # Configure the logging settings
     log_filename = os.path.join(parent_dir, f"logs/{script_name}_{get_timestamp()}.log")
 
+    print(f'custom logging - get_timestamp = {get_timestamp()}')
+
     logging.getLogger("requests").setLevel(logging.WARNING)
     logging.getLogger("urllib3").setLevel(logging.WARNING)
     logging.getLogger("botocore").setLevel(logging.ERROR)

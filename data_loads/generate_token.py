@@ -9,7 +9,7 @@ sys.path.append(parent_dir)
 import json
 import requests
 from configs.config_urls import url_upstox_token, headers_upstox_token
-from configs.config import s3_client, bucket_name
+from configs.config import s3_client, bucket_name, get_timestamp
 from datetime import datetime
 from helper.custom_logging_script import setup_logger, custom_logging
 
@@ -21,6 +21,8 @@ script_name = os.path.basename(__file__).split('.')[0]
 
 # Initialize the logger with the script name
 logger = setup_logger(script_name)
+
+print(f'generate token - get_timestamp = {get_timestamp()}')
 
 date_yyyymmdd = datetime.now().strftime("%Y%m%d")
 

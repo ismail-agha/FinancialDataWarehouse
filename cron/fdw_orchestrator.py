@@ -9,7 +9,7 @@ parent_dir = os.path.dirname(current_dir)
 sys.path.append(parent_dir)
 
 from helper.custom_logging_script import setup_logger, custom_logging
-from configs.config import ec2_client, ec2_istance_id, initialize_timestamp
+from configs.config import ec2_client, ec2_istance_id, initialize_timestamp, get_timestamp
 from helper.custom_generate_email import email
 from helper.helper_identify_holidays import is_holiday
 
@@ -47,8 +47,6 @@ def execute_script(script_path):
 
         custom_logging(logger, 'INFO', f'Completed {script_path}')
     except subprocess.CalledProcessError as e:
-        #print(f"Error executing {script_path}: {e}")
-        #custom_logging(logger, 'ERROR', f"Error executing {script_path}: {e}")
         raise  # Reraise the exception so it can be caught in the main() function
 
 
@@ -82,6 +80,8 @@ if __name__ == "__main__":
 
     # Initialize the logger with the script name
     logger = setup_logger(script_name)
+
+    print(f'main get_timestamp = {get_timestamp()}')
 
     custom_logging(logger, 'INFO', f'Start time: {datetime.datetime.now().strftime("%Y%m%d_%H%M%S")}')
     main()
