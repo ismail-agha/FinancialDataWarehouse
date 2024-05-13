@@ -62,7 +62,7 @@ def main(process_start_time):
             # Execute data_load_equity_list.py
             execute_script("data_loads/data_load_equity_list.py", process_start_time)
 
-            #execute_script("data_loads/data_load_equity_daily.py", process_start_time)
+            execute_script("data_loads/data_load_equity_daily.py", process_start_time)
         else:
             custom_logging(logger, 'INFO', f'Holiday Today due to {check_holiday.get("info")}')
 
