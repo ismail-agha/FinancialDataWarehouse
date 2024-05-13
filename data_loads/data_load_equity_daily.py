@@ -33,7 +33,7 @@ timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
 
 def get_token():
     try:
-        with open('../token/token.txt', 'r') as file:
+        with open(os.path.join(parent_dir, f"token/token.txt"), 'r') as file:
             token = file.read()
         custom_logging(logger, 'INFO', f'Completed get_token().')
         return token

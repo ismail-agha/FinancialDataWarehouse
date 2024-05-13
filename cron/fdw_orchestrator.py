@@ -1,7 +1,7 @@
 import subprocess
 import datetime
 import sys
-import os
+import os, shutil
 
 # Add parent directory to the Python path
 current_dir = os.path.dirname(os.path.abspath(__file__))
@@ -47,7 +47,7 @@ def execute_script(script_path, process_start_time):
         #subprocess.run(["/usr/bin/python3", script_path], check=True) /home/ec2-user/FinancialDataWarehouse/venv/bin
         subprocess.run([virtual_env_python, script_path, process_start_time], check=True)
 
-        custom_logging(logger, 'INFO', f'Completed {script_path}')
+        custom_logging(logger, 'INFO', f'Completed {script_path}.')
     except subprocess.CalledProcessError as e:
         raise  # Reraise the exception so it can be caught in the main() function
 
@@ -56,15 +56,19 @@ def main(process_start_time):
     try:
         check_holiday = is_holiday()
         if not check_holiday.get('is_holiday'):
-            # Execute generate_token.py
-            execute_script("data_loads/generate_token.py", process_start_time)
+            if os.path.exists(os.path.join(parent_dir, f"token/token.txt")):
+                custom_logging(logger, 'INFO', f'Token file is already present, thus skipping generate_token.py.')
+            else:
+                custom_logging(logger, 'INFO', f'Token file is missing, thus executing the generate_token.py script.')
+                # Execute generate_token.py
+                execute_script("data_loads/generate_token.py", process_start_time)
 
             # Execute data_load_equity_list.py
             execute_script("data_loads/data_load_equity_list.py", process_start_time)
 
             execute_script("data_loads/data_load_equity_daily.py", process_start_time)
         else:
-            custom_logging(logger, 'INFO', f'Holiday Today due to {check_holiday.get("info")}')
+            custom_logging(logger, 'INFO', f'Holiday Today due to {check_holiday.get("info")}.')
 
 
     except Exception as e:
@@ -73,7 +77,13 @@ def main(process_start_time):
         perform_cleanup()
         exit(1)
 
+
+def archive_token():
+    shutil.move(os.path.join(parent_dir, f"token/token.txt"), os.path.join(parent_dir, f"token/backup/token.txt"))
+    custom_logging(logger, 'INFO', f'Completed - Token file archival.')
+
 def perform_cleanup():
+    archive_token()
     custom_logging(logger, 'INFO', f'End time: {datetime.datetime.now().strftime("%Y%m%d_%H%M%S")}')
     email(process_start_time)
     stop_instance(ec2_istance_id)
