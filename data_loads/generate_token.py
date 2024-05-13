@@ -5,6 +5,7 @@ import sys
 current_dir = os.path.dirname(os.path.abspath(__file__))
 parent_dir = os.path.dirname(current_dir)
 sys.path.append(parent_dir)
+token_file_path = os.path.join(parent_dir, f"token/token.txt")
 
 import json
 import requests
@@ -74,9 +75,13 @@ try:
         if access_token:
             print(f"Access Token: {access_token}")
 
+            custom_logging(logger, 'INFO', f'Completed generating an Access Token')
+
             # Write the access token to a file
-            with open(file='../token/token.txt', mode='w') as file:
+            with open(file=token_file_path, mode='w') as file:
                 file.write(access_token)
+
+            custom_logging(logger, 'INFO', f'Completed creating a Token file')
         else:
             print("Access token not found in the response.")
             custom_logging(logger, 'ERROR', f'Access token not found in the response.')
