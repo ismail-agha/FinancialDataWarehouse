@@ -40,11 +40,11 @@ try:
 
     # Print or process the file content
     print(upstox_code)
-    custom_logging(logger, 'INFO', f'Completed reading data from file {file_key}. The code is {upstox_code}')
+    custom_logging(logger, 'INFO', f'Completed reading data from file {file_key}. The code is {upstox_code}.')
 
 except Exception as e:
     print(f"Error reading file from S3: {e}")
-    custom_logging(logger, 'ERROR', f'Error while reading data from file {file_key}. Error = {e}')
+    custom_logging(logger, 'ERROR', f'Error while reading data from file {file_key}. Error = {e}.')
     exit(1)
 
 data = {
@@ -75,27 +75,27 @@ try:
         if access_token:
             print(f"Access Token: {access_token}")
 
-            custom_logging(logger, 'INFO', f'Completed generating an Access Token')
+            custom_logging(logger, 'INFO', f'Completed generating an Access Token.')
 
             # Write the access token to a file
             with open(file=token_file_path, mode='w') as file:
                 file.write(access_token)
 
-            custom_logging(logger, 'INFO', f'Completed creating a Token file')
+            custom_logging(logger, 'INFO', f'Completed creating a Token file.')
         else:
             print("Access token not found in the response.")
             custom_logging(logger, 'ERROR', f'Access token not found in the response.')
             exit(1)
     else:
         # Print error message if request was unsuccessful
-        print(f"Error while generating token. Error = {response.status_code} - {response.reason} - {json.loads(response.text)['errors'][0]['message']}")
-        custom_logging(logger, 'ERROR', f"Error while generating token. Error = {response.status_code} - {response.reason} - {json.loads(response.text)['errors'][0]['message']}")
+        print(f"Error while generating token. Error = {response.status_code} - {response.reason} - {json.loads(response.text)['errors'][0]['message']}.")
+        custom_logging(logger, 'ERROR', f"Error while generating token. Error = {response.status_code} - {response.reason} - {json.loads(response.text)['errors'][0]['message']}.")
         exit(1)
 
     custom_logging(logger, 'INFO', f'Completed creating token file.')
 except Exception as e:
     # Handle any exceptions that occur during the execution of the code
     print(f"An error occurred: {e}")
-    custom_logging(logger, 'ERROR', f'Error while generating token. Error = {e}')
+    custom_logging(logger, 'ERROR', f'Error while generating token. Error = {e}.')
     exit(1)
 
