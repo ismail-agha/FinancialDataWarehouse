@@ -56,7 +56,7 @@ def read_sql_file(file_path):
 
 def generate_isin_str(sql_file):
     try:
-        file_path = '../sql/' + sql_file
+        file_path = os.path.join(parent_dir, f"sql/{sql_file}") #'../sql/' + sql_file
         result_df = pd.read_sql_query(read_sql_file(file_path), engine)
         custom_logging(logger, 'INFO', f'Completed generate_isin_str({sql_file}).')
         return result_df
