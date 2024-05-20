@@ -30,7 +30,7 @@ class TABLE_MODEL_EQUITY_LIST(Base):
     security_group = Column('security_group', Integer)
     face_value = Column('face_value', Integer)
     industry = Column('industry', Integer)
-    market_capitalisation_in_crore = Column('market_capitalisation_in_crore', String)
+    market_capitalisation_in_crore = Column('market_capitalisation_in_crore', Integer)
     audit_create_date = Column('audit_create_date', String)
     audit_update_date = Column('audit_update_date', String)
 
@@ -65,6 +65,7 @@ class TABLE_MODEL_EQUITY_HISTORICAL_DATA(Base):
     total_sell_quantity = Column(Integer)
     average_price = Column(Integer)
     audit_creation_date = Column(String)
+    mcap = Column(Integer)
 
 
     def __repr__(self):

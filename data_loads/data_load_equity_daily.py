@@ -14,6 +14,7 @@ import concurrent.futures
 from configs.config_urls import upstox_eq_full_market_quote, upstox_headers_market_quote
 from db.database_and_models import engine, TABLE_MODEL_EQUITY_HISTORICAL_DATA, session, SQLAlchemyError
 from sqlalchemy.dialects.postgresql import insert as pg_insert
+from sqlalchemy import text
 from helper.custom_logging_script import setup_logger, custom_logging
 
 # ---------
@@ -30,6 +31,7 @@ logger = setup_logger(script_name, process_start_time)
 
 # Create a timestamp string
 timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+date_yyyy_mm_dd = datetime.now().strftime("%Y-%m-%d")
 
 def get_token():
     try:
@@ -153,6 +155,20 @@ def insert_data(data):
 
     try:
         session.execute(insert_stmt)
+
+        update_query = text("""
+            UPDATE sm.equity_historical_data ehd
+            SET mcap = el.market_capitalisation_in_crore
+            FROM sm.equity_list el
+            WHERE ehd.isin_number = el.isin_number
+            AND ehd.trade_date BETWEEN :start_date AND :end_date;
+        """)
+
+        session.execute(update_query, {
+            'start_date': f'{date_yyyy_mm_dd} 00:00:00',
+            'end_date': f'{date_yyyy_mm_dd} 23:59:59'
+        })
+
         session.commit()
     except SQLAlchemyError as e:
         error = str(e)
