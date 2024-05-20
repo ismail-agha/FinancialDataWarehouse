@@ -83,7 +83,8 @@ def archive_token():
     custom_logging(logger, 'INFO', f'Completed - Token file archival.')
 
 def perform_cleanup():
-    archive_token()
+    if os.path.exists(os.path.join(parent_dir, f"token/token.txt")):
+        archive_token()
     custom_logging(logger, 'INFO', f'End time: {datetime.datetime.now().strftime("%Y%m%d_%H%M%S")}')
     email(process_start_time)
     stop_instance(ec2_istance_id)
