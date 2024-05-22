@@ -125,6 +125,8 @@ def api_get_data(upstox_token, isin_df):
 
     db_update_table()
 
+    session.close()
+
 def make_api_call(url, headers):
     #print(f'URL = {url} | headers = {headers}')
     try:
@@ -170,7 +172,7 @@ def insert_data(data):
 
     finally:
         custom_logging(logger, 'INFO', f'Completed insert_data().')
-        session.close()
+        #session.close()
 
 def db_update_table():
     try:
@@ -193,7 +195,7 @@ def db_update_table():
 
     finally:
         custom_logging(logger, 'INFO', f'Completed db_update_table(mcap).')
-        session.close()
+        #session.close()
 
 def main():
     isin_df = generate_isin_str('sql_generate_isin_str.sql')
