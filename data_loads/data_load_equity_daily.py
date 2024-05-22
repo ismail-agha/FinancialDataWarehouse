@@ -123,6 +123,7 @@ def api_get_data(upstox_token, isin_df):
                 custom_logging(logger, 'ERROR', f'Error in api_get_data(). Error = {e}.')
                 raise
 
+    db_update_table()
 
 def make_api_call(url, headers):
     #print(f'URL = {url} | headers = {headers}')
@@ -155,20 +156,6 @@ def insert_data(data):
 
     try:
         session.execute(insert_stmt)
-
-        update_query = text("""
-            UPDATE sm.equity_historical_data ehd
-            SET mcap = el.market_capitalisation_in_crore
-            FROM sm.equity_list el
-            WHERE ehd.isin_number = el.isin_number
-            AND ehd.trade_date BETWEEN :start_date AND :end_date;
-        """)
-
-        session.execute(update_query, {
-            'start_date': f'{date_yyyy_mm_dd} 00:00:00',
-            'end_date': f'{date_yyyy_mm_dd} 23:59:59'
-        })
-
         session.commit()
     except SQLAlchemyError as e:
         error = str(e)
@@ -183,6 +170,29 @@ def insert_data(data):
 
     finally:
         custom_logging(logger, 'INFO', f'Completed insert_data().')
+        session.close()
+
+def db_update_table():
+    try:
+        update_query = text("""
+            UPDATE sm.equity_historical_data ehd
+            SET mcap = el.market_capitalisation_in_crore
+            FROM sm.equity_list el
+            WHERE ehd.isin_number = el.isin_number
+            AND ehd.trade_date BETWEEN :start_date AND :end_date;
+        """)
+        session.execute(update_query, {
+            'start_date': f'{date_yyyy_mm_dd} 00:00:00',
+            'end_date': f'{date_yyyy_mm_dd} 23:59:59'
+        })
+        session.commit()
+    except Exception as e:
+        print("Error updating data into the database:", e)
+        custom_logging(logger, 'ERROR', f'Error in db_update_table(mcap). Error = {e}.')
+        raise
+
+    finally:
+        custom_logging(logger, 'INFO', f'Completed db_update_table(mcap).')
         session.close()
 
 def main():
