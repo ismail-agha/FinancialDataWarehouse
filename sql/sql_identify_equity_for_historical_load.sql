@@ -15,4 +15,5 @@ on a.isin_number = stat.isin_number and a.exg = stat.exchange
 --where a.isin_number in ('INE00CE01017')
 )
 select * from b
-where audit_creation_date is null;
+--where audit_creation_date is null
+;

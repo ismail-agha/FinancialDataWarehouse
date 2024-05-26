@@ -154,31 +154,31 @@ def insert_data(data, isin_number, security_name, exchange):
 
     # Insert into stats
     # Define the SQL statement
-    sql_ins_historical_load_status = text("""
-        INSERT INTO sm.audit_equity_historical_load_status (exchange, isin_number, audit_creation_date, audit_update_date)
-        VALUES (:exchange, :isin_number, :audit_creation_date, :audit_update_date)
-        ON CONFLICT (exchange, isin_number)
-        DO UPDATE SET
-            audit_update_date = EXCLUDED.audit_update_date
-        WHERE sm.audit_equity_historical_load_status.exchange = :exchange and sm.audit_equity_historical_load_status.isin_number = :isin_number
-    """)
-
-    # Bind parameters
-    params = {
-        "exchange": exchange,
-        'isin_number': isin_number,
-        'audit_creation_date': pd.Timestamp.today(),
-        'audit_update_date': pd.Timestamp.today()
-    }
-
-    # Execute the SQL statement
-    try:
-        with engine.connect() as connection:
-            a = connection.execute(sql_ins_historical_load_status, params)
-            connection.commit()
-    except Exception as e:
-        print(f"insert_data(audit_equity_historical_load_status) - Except: SecurityCode={isin_number} Errored-Out:", e)
-        logger.error(f'insert_data(audit_equity_historical_load_status) - SecurityCode={isin_number} Errored-Out: {e}')
+    # sql_ins_historical_load_status = text("""
+    #     INSERT INTO sm.audit_equity_historical_load_status (exchange, isin_number, audit_creation_date, audit_update_date)
+    #     VALUES (:exchange, :isin_number, :audit_creation_date, :audit_update_date)
+    #     ON CONFLICT (exchange, isin_number)
+    #     DO UPDATE SET
+    #         audit_update_date = EXCLUDED.audit_update_date
+    #     WHERE sm.audit_equity_historical_load_status.exchange = :exchange and sm.audit_equity_historical_load_status.isin_number = :isin_number
+    # """)
+    #
+    # # Bind parameters
+    # params = {
+    #     "exchange": exchange,
+    #     'isin_number': isin_number,
+    #     'audit_creation_date': pd.Timestamp.today(),
+    #     'audit_update_date': pd.Timestamp.today()
+    # }
+    #
+    # # Execute the SQL statement
+    # try:
+    #     with engine.connect() as connection:
+    #         a = connection.execute(sql_ins_historical_load_status, params)
+    #         connection.commit()
+    # except Exception as e:
+    #     print(f"insert_data(audit_equity_historical_load_status) - Except: SecurityCode={isin_number} Errored-Out:", e)
+    #     logger.error(f'insert_data(audit_equity_historical_load_status) - SecurityCode={isin_number} Errored-Out: {e}')
 
 
 if __name__ == "__main__":
