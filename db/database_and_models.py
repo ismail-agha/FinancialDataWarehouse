@@ -67,6 +67,33 @@ class TABLE_MODEL_EQUITY_HISTORICAL_DATA(Base):
     audit_creation_date = Column(String)
     mcap = Column(Integer)
 
+    def __repr__(self):
+        return f"<YourTable(id={self.id}, security_code='{self.security_code}', column_name='{self.column_name}')>"
+
+
+class TABLE_MODEL_EQUITY_HISTORICAL_DATA_DPD(Base):
+    __tablename__ = 'equity_historical_data_dpd'
+    __table_args__ = {'schema': 'sm'}
+
+    exchange = Column(String)
+    trade_date = Column(String)
+    isin_number = Column(String, primary_key=True)
+    security_name = Column(String)
+    open = Column(Integer)
+    high = Column(Integer)
+    low = Column(Integer)
+    close = Column(Integer)
+    last_price = Column(Integer)
+    mcap = Column(Integer)
+    volume = Column(Integer)
+    average_price = Column(Integer)
+    net_change = Column(Integer)
+    total_buy_quantity = Column(Integer)
+    total_sell_quantity = Column(Integer)
+    lower_circuit_limit = Column(Integer)
+    upper_circuit_limit = Column(Integer)
+    open_interest = Column(Integer)
+    audit_creation_date = Column(String)
 
     def __repr__(self):
         return f"<YourTable(id={self.id}, security_code='{self.security_code}', column_name='{self.column_name}')>"
