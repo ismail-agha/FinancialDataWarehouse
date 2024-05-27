@@ -193,22 +193,23 @@ def db_insert(df_final):
         session.close()
         exit(1)
 
-    # Create Partitions for Table - sm.equity_market_historical_data
-    try:
-        # Execute the stored procedure to create partitions
-        session.execute(text("CALL sm.proc_create_partitions_ehd();"))
-
-        # Commit the transaction
-        session.commit()
-        print("Partitions created for sm.equity_market_historical_data.")
-        custom_logging(logger, 'INFO', f'Completed db_insert() - Partitions Created.')
-
-    except Exception as e:
-        print("Error in db_insert(Partitions):", e)
-        custom_logging(logger, 'ERROR', f'Error in db_insert() - Partitions Creation Failed. Error = {e}.')
-        session.rollback()
-        session.close()
-        exit(1)
+    # 20240527 - Below code to create Partition's is no longer required because the Table "sm.equity_market_historical_data" is now partitioned by Trade-Date
+    # # Create Partitions for Table - sm.equity_market_historical_data
+    # try:
+    #     # Execute the stored procedure to create partitions
+    #     session.execute(text("CALL sm.proc_create_partitions_ehd();"))
+    #
+    #     # Commit the transaction
+    #     session.commit()
+    #     print("Partitions created for sm.equity_market_historical_data.")
+    #     custom_logging(logger, 'INFO', f'Completed db_insert() - Partitions Created.')
+    #
+    # except Exception as e:
+    #     print("Error in db_insert(Partitions):", e)
+    #     custom_logging(logger, 'ERROR', f'Error in db_insert() - Partitions Creation Failed. Error = {e}.')
+    #     session.rollback()
+    #     session.close()
+    #     exit(1)
 
     session.close()
 
