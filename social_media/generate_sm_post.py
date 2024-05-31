@@ -61,7 +61,7 @@ def draw_top_equities(image_path, font_path, output_path, title, entries, arrow,
     while True:
         font = ImageFont.truetype(font_path, initial_font_size)
         content_width, content_height = calculate_content_size(draw, font, entries, 20)
-        if content_width > bg_width * 0.75 or content_height > bg_height * 0.75:
+        if content_width > bg_width * 0.70 or content_height > bg_height * 0.70:
             break
         initial_font_size += 1
 
@@ -138,7 +138,7 @@ def issuername_capitalize(text):
     title_case_words = [word.capitalize() for word in words]
 
     # Join them into a single string
-    return ' '.join(title_case_words)
+    return ' '.join(title_case_words)[:20]
 
 if __name__ == "__main__":
     if len(sys.argv) > 1 and sys.argv[1]!='':
