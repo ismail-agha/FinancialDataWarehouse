@@ -68,19 +68,19 @@ def email(process_start_time):
 
     # Attach Social Media Post File
     smpost_dir = os.path.join(parent_dir, f"social_media")
-    smpost_dir_files = os.listdir(log_directory)
+    smpost_dir_files = os.listdir(smpost_dir)
     for file in smpost_dir_files:
         match = re.search('smpost_', file)
         if match:
             attachment_paths.append(os.path.join(smpost_dir, file))
 
-    print(f' attachment_paths = {attachment_paths}')
+    print(f'attachment_paths = {attachment_paths}')
 
     # Ensure that attachment_paths is a single string representing a file path
     if attachment_paths:
         attachment_path = attachment_paths[0]  # Take the first file path from the list
 
-    print(f' attachment_paths = {attachment_path}')
+    print(f'\nattachment_path = {attachment_path}')
 
     send_email(sender_email, sender_password, receiver_email, subject, body, attachment_paths)
 
