@@ -61,7 +61,7 @@ def draw_top_equities(image_path, font_path, output_path, title, entries, arrow,
     while True:
         font = ImageFont.truetype(font_path, initial_font_size)
         content_width, content_height = calculate_content_size(draw, font, entries, 20)
-        if content_width > bg_width * 0.7 or content_height > bg_height * 0.7:
+        if content_width > bg_width * 0.7 or content_height > bg_height * 0.75:
             break
         initial_font_size += 1
 
