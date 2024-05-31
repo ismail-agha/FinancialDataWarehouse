@@ -2,6 +2,7 @@ import os
 import re
 import sys
 import smtplib
+import datetime
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from email.mime.application import MIMEApplication
@@ -85,4 +86,9 @@ def email(process_start_time):
 
 
 if __name__ == "__main__":
-    email()
+    if len(sys.argv) > 1:
+        trade_date = sys.argv[1]
+    else:
+        trade_date = datetime.now().strftime("%Y-%m-%d")
+
+    email(trade_date)
