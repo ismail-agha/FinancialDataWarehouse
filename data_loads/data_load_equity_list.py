@@ -12,7 +12,7 @@ from configs.config import s3_client, bucket_name
 from configs.config_urls import curl_cmd_bse_equity, nse_equity_request_params
 import pandas as pd
 from db.database_and_models import TABLE_MODEL_EQUITY_LIST, session
-import json
+import json, time
 from sqlalchemy import text
 import concurrent.futures
 from datetime import datetime
@@ -37,10 +37,26 @@ date_yyyymmdd = datetime.now().strftime("%Y%m%d")
 def bse():
     try:
         # Execute the curl command and capture the output
-        output  = subprocess.check_output(curl_cmd_bse_equity)
+        while True:
+            output  = subprocess.check_output(curl_cmd_bse_equity)
 
-        # Convert the JSON string to a Python dictionary
-        data = json.loads(output)
+            # Convert the JSON string to a Python dictionary
+            data = json.loads(output)
+
+            # Check if the length of the data is more than 3999
+            if len(data) > 4000:
+                print(f'Length = {len(data)}. Done.')
+                custom_logging(logger, 'INFO',
+                               f'bse() - Length = {len(data)}. Done.')
+                break
+            else:
+                print(f'Length = {len(data)}. Fetching Again.')
+                custom_logging(logger, 'INFO',
+                               f'bse() - Incomplete response obtained from BSE Server. '
+                               f'Length = {len(data)}. Fetching Again post sleep of 10.')
+
+            # Wait for 5 seconds before the next iteration
+            time.sleep(10)
 
         for item in data:
             del item["NSURL"]  # drop "NSURL" column
