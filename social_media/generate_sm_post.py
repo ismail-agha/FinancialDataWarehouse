@@ -1,12 +1,13 @@
 from PIL import Image, ImageDraw, ImageFont
 import os, sys
 from datetime import datetime
-from api.get_data import get_top_n_equity_gainers_losers
 
 # Add parent directory to the Python path
 current_dir = os.path.dirname(os.path.abspath(__file__))
 parent_dir = os.path.dirname(current_dir)
 sys.path.append(parent_dir)
+
+from api.get_data import get_top_n_equity_gainers_losers
 
 # Paths to the background image and font file
 background_image_path = os.path.join(parent_dir, f"files/fdw_post_bg.png")
@@ -120,18 +121,29 @@ def convert_date(date_str):
     return f"{formatted_date} ({day_of_week})"
 
 if __name__ == "__main__":
-    trade_date = '2024-01-30' #datetime.now().strftime("%Y-%m-%d") #'2024-01-30'
+    if len(sys.argv) > 1:
+        trade_date = sys.argv[1]
+    else:
+        trade_date = datetime.now().strftime("%Y-%m-%d")
+
+    print(f'trade_date = {trade_date}')
+
     exchange = 'BSE'
 
     # Get top gainers
     gainers_df = get_top_n_equity_gainers_losers(trade_date=trade_date, exchange=exchange, type='G', n=5)
-    print(gainers_df)
-    gainers = [(row['issuer_name'], row['current_close'], row['percentage_change']) for _, row in gainers_df.iterrows()]
-    draw_top_equities(background_image_path, font_path, 'smpost_top_gainers.png', f"Top 5 {exchange} Gainers", gainers, "↑", green,
-                      trade_date)
+    if len(gainers_df) != 0:
+        gainers = [(row['issuer_name'], row['current_close'], row['percentage_change']) for _, row in gainers_df.iterrows()]
+        draw_top_equities(background_image_path, font_path, 'smpost_top_gainers.png', f"Top 5 {exchange} Gainers", gainers, "↑", green,
+                          trade_date)
+    else:
+        print(f'Gainers DF is empty for trade_date {trade_date}')
 
     # Get top losers
     losers_df = get_top_n_equity_gainers_losers(trade_date=trade_date, exchange=exchange, type='L', n=5)
-    losers = [(row['issuer_name'], row['current_close'], row['percentage_change']) for _, row in losers_df.iterrows()]
-    draw_top_equities(background_image_path, font_path, 'smpost_top_losers.png', f"Top 5 {exchange} Losers", losers, "↓", red, trade_date)
+    if len(losers_df) != 0:
+        losers = [(row['issuer_name'], row['current_close'], row['percentage_change']) for _, row in losers_df.iterrows()]
+        draw_top_equities(background_image_path, font_path, 'smpost_top_losers.png', f"Top 5 {exchange} Losers", losers, "↓", red, trade_date)
+    else:
+        print(f'Losers DF is empty for trade_date {trade_date}')
 
