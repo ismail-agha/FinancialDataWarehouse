@@ -121,6 +121,25 @@ def convert_date(date_str):
     # Return the formatted date with the day of the week
     return f"{formatted_date} ({day_of_week})"
 
+
+def issuername_capitalize(text):
+    # Split the text into words
+    words = text.split()
+
+    # Check if the third word is "limited" or "service" (case-insensitive)
+    if len(words) > 2 and words[2].lower() in ["limited", "service"]:
+        # If true, only consider the first two words
+        words = words[:2]
+    else:
+        # Otherwise, consider the first three words
+        words = words[:3]
+
+    # Convert each word to title case
+    title_case_words = [word.capitalize() for word in words]
+
+    # Join them into a single string
+    return ''.join(title_case_words)
+
 if __name__ == "__main__":
     if len(sys.argv) > 1 and sys.argv[1]!='':
         trade_date = sys.argv[1]
@@ -134,7 +153,7 @@ if __name__ == "__main__":
     # Get top gainers
     gainers_df = get_top_n_equity_gainers_losers(trade_date=trade_date, exchange=exchange, type='G', n=5)
     if len(gainers_df) != 0:
-        gainers = [(' '.join(row['issuer_name'].split()[:3]), row['current_close'], row['percentage_change']) for _, row in gainers_df.iterrows()]
+        gainers = [(issuername_capitalize(row['issuer_name']), row['current_close'], row['percentage_change']) for _, row in gainers_df.iterrows()]
         draw_top_equities(background_image_path, font_path, 'smpost_top_gainers.png', f"Top 5 {exchange} Gainers", gainers, "↑", green,
                           trade_date)
     else:
@@ -143,7 +162,7 @@ if __name__ == "__main__":
     # Get top losers
     losers_df = get_top_n_equity_gainers_losers(trade_date=trade_date, exchange=exchange, type='L', n=5)
     if len(losers_df) != 0:
-        losers = [(' '.join(row['issuer_name'].split()[:3]), row['current_close'], row['percentage_change']) for _, row in losers_df.iterrows()]
+        losers = [(issuername_capitalize(row['issuer_name']), row['current_close'], row['percentage_change']) for _, row in losers_df.iterrows()]
         draw_top_equities(background_image_path, font_path, 'smpost_top_losers.png', f"Top 5 {exchange} Losers", losers, "↓", red, trade_date)
     else:
         print(f'Losers DF is empty for trade_date {trade_date}')
