@@ -65,6 +65,14 @@ def email(process_start_time):
             timestamp = match.group()
             attachment_paths.append(os.path.join(log_directory, file))
 
+    # Attach Social Media Post File
+    smpost_dir = os.path.join(parent_dir, f"social_media")
+    smpost_dir_files = os.listdir(log_directory)
+    for file in smpost_dir_files:
+        match = re.search('smpost_', file)
+        if match:
+            attachment_paths.append(os.path.join(smpost_dir, file))
+
     print(f' attachment_paths = {attachment_paths}')
 
     # Ensure that attachment_paths is a single string representing a file path

@@ -66,7 +66,11 @@ def main(process_start_time):
             # Execute data_load_equity_list.py
             execute_script("data_loads/data_load_equity_list.py", process_start_time)
 
+            # Execute data_load_equity_daily.py
             execute_script("data_loads/data_load_equity_daily.py", process_start_time)
+
+            # Execute generate_sm_post.py
+            execute_script("social_media/generate_sm_post.py")
         else:
             custom_logging(logger, 'INFO', f'Holiday Today due to {check_holiday.get("info")}.')
 

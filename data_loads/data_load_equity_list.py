@@ -66,20 +66,21 @@ def bse():
         df['face_value'] = pd.to_numeric(df['face_value'], errors='coerce').fillna(0).astype('int')
         df['market_capitalisation_in_crore'] = pd.to_numeric(df['market_capitalisation_in_crore'], errors='coerce').fillna(0).astype('float')
 
-        #print(df)
-        custom_logging(logger, 'INFO', f'Completed bse() - BSE Equity Dataframe created.')
+        if len(df) != 0:
+            custom_logging(logger, 'INFO', f'Completed bse() - BSE Equity Dataframe created. Total Rows = {len(df)}.')
+            return df
+        else:
+            custom_logging(logger, 'INFO', f'Completed bse() - BSE Equity Dataframe has no records. Total Rows = {len(df)}.')
+            exit(1)
 
-        #print(f'BSE DF Created: {df.head()}')
-
-        return df
 
     except subprocess.CalledProcessError as e:
         print(f"Error in bse() - Error : {e}")
-        custom_logging(logger, 'ERROR', f'Error in bse() - Error : {e}')
+        custom_logging(logger, 'ERROR', f'Error in bse() - Error : {e}.')
         exit(1)
     except Exception as e:
         print(f"Error in bse() - Error : {e}")
-        custom_logging(logger, 'ERROR', f'Error in bse() - Error : {e}')
+        custom_logging(logger, 'ERROR', f'Error in bse() - Error : {e}.')
         exit(1)
 
 def nse_empty():
@@ -124,15 +125,17 @@ def nse():
         # Add 'status' column
         nse_df['status'] = 'Active'
 
-        custom_logging(logger, 'INFO', f'Completed nse() - NSE Equity Dataframe created.')
+        if len(nse_df)!=0:
+            custom_logging(logger, 'INFO', f'Completed nse() - NSE Equity Dataframe created. Total Rows = {len(nse_df)}.')
+            return nse_df
+        else:
+            custom_logging(logger, 'INFO', f'Completed nse() - NSE Equity Dataframe has no records. Total Rows = {len(nse_df)}.')
+            exit(1)
 
     except Exception as e:
         print(f"Error in nse() - Error : {e}")
-        custom_logging(logger, 'ERROR', f'Error in nse({nse_equity_file}) - Error : {e}')
+        custom_logging(logger, 'ERROR', f'Error in nse({nse_equity_file}) - Error : {e}.')
         exit(1)
-        nse_df = pd.DataFrame(columns=['isin_number', 'security_code', 'issuer_name', 'face_value', 'status'])
-
-    return nse_df
 
 
 def merge_bse_nse(df_bse, df_nse):
