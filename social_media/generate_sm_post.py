@@ -149,7 +149,7 @@ if __name__ == "__main__":
     print(f'trade_date = {trade_date}')
 
     exchange = 'BSE'
-    n=7
+    n=10
 
     # Get top gainers
     gainers_df = get_top_n_equity_gainers_losers(trade_date=trade_date, exchange=exchange, type='G', n=n)
