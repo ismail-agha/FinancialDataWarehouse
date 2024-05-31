@@ -134,7 +134,7 @@ if __name__ == "__main__":
     # Get top gainers
     gainers_df = get_top_n_equity_gainers_losers(trade_date=trade_date, exchange=exchange, type='G', n=5)
     if len(gainers_df) != 0:
-        gainers = [(row['issuer_name'], row['current_close'], row['percentage_change']) for _, row in gainers_df.iterrows()]
+        gainers = [(' '.join(row['issuer_name'].split()[:3]), row['current_close'], row['percentage_change']) for _, row in gainers_df.iterrows()]
         draw_top_equities(background_image_path, font_path, 'smpost_top_gainers.png', f"Top 5 {exchange} Gainers", gainers, "↑", green,
                           trade_date)
     else:
@@ -143,7 +143,7 @@ if __name__ == "__main__":
     # Get top losers
     losers_df = get_top_n_equity_gainers_losers(trade_date=trade_date, exchange=exchange, type='L', n=5)
     if len(losers_df) != 0:
-        losers = [(row['issuer_name'], row['current_close'], row['percentage_change']) for _, row in losers_df.iterrows()]
+        losers = [(' '.join(row['issuer_name'].split()[:3]), row['current_close'], row['percentage_change']) for _, row in losers_df.iterrows()]
         draw_top_equities(background_image_path, font_path, 'smpost_top_losers.png', f"Top 5 {exchange} Losers", losers, "↓", red, trade_date)
     else:
         print(f'Losers DF is empty for trade_date {trade_date}')
