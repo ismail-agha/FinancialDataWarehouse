@@ -127,7 +127,7 @@ def issuername_capitalize(text):
     words = text.split()
 
     # Check if the third word is "limited" or "service" (case-insensitive)
-    if len(words) > 2 and words[2].lower() in ["limited", "service"]:
+    if len(words) > 2 and words[2].lower() in ["limited", "service", "system", "systems", "ltd", "ltd."]:
         # If true, only consider the first two words
         words = words[:2]
     else:
@@ -138,7 +138,7 @@ def issuername_capitalize(text):
     title_case_words = [word.capitalize() for word in words]
 
     # Join them into a single string
-    return ''.join(title_case_words)
+    return ' '.join(title_case_words)
 
 if __name__ == "__main__":
     if len(sys.argv) > 1 and sys.argv[1]!='':
