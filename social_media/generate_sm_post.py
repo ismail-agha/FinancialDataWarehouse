@@ -41,6 +41,7 @@ def calculate_content_size(draw, font, entries, padding):
     return text_width + 2 * padding, header_height + content_height + 2 * padding
 
 def draw_top_equities(image_path, font_path, output_path, title, entries, arrow, arrow_color, trade_date):
+    output_path = os.path.join(parent_dir, f"social_media/{output_path}")
     trade_date = convert_date(trade_date)
 
     padding = 20  # Define padding
@@ -104,7 +105,7 @@ def draw_top_equities(image_path, font_path, output_path, title, entries, arrow,
 
     # Save the image
     background_image.save(output_path)
-    background_image.show()
+    #background_image.show()
 
 
 def convert_date(date_str):
