@@ -148,23 +148,47 @@ if __name__ == "__main__":
 
     print(f'trade_date = {trade_date}')
 
-    exchange = 'BSE'
+
     n=10
 
-    # Get top gainers
+    # BSE Get top gainers and losers
+    exchange = 'BSE'
+
     gainers_df = get_top_n_equity_gainers_losers(trade_date=trade_date, exchange=exchange, type='G', n=n)
     if len(gainers_df) != 0:
         gainers = [(issuername_capitalize(row['issuer_name']), row['current_close'], row['percentage_change']) for _, row in gainers_df.iterrows()]
-        draw_top_equities(background_image_path, font_path, 'smpost_top_gainers.png', f"Top {n} {exchange} Gainers", gainers, "↑", green,
+        draw_top_equities(background_image_path, font_path, 'smpost_bse_top_gainers.png', f"Top {n} {exchange} Gainers", gainers, "↑", green,
                           trade_date)
     else:
-        print(f'Gainers DF is empty for trade_date {trade_date}')
+        print(f'BSE Gainers DF is empty for trade_date {trade_date}')
 
-    # Get top losers
     losers_df = get_top_n_equity_gainers_losers(trade_date=trade_date, exchange=exchange, type='L', n=n)
     if len(losers_df) != 0:
         losers = [(issuername_capitalize(row['issuer_name']), row['current_close'], row['percentage_change']) for _, row in losers_df.iterrows()]
-        draw_top_equities(background_image_path, font_path, 'smpost_top_losers.png', f"Top {n} {exchange} Losers", losers, "↓", red, trade_date)
+        draw_top_equities(background_image_path, font_path, 'smpost_bse_top_losers.png', f"Top {n} {exchange} Losers", losers, "↓", red, trade_date)
     else:
-        print(f'Losers DF is empty for trade_date {trade_date}')
+        print(f'BSE Losers DF is empty for trade_date {trade_date}')
+
+
+    # NSE Get top gainers and losers
+    exchange = 'NSE'
+
+    gainers_df = get_top_n_equity_gainers_losers(trade_date=trade_date, exchange=exchange, type='G', n=n)
+    if len(gainers_df) != 0:
+        gainers = [(issuername_capitalize(row['issuer_name']), row['current_close'], row['percentage_change']) for
+                   _, row in gainers_df.iterrows()]
+        draw_top_equities(background_image_path, font_path, 'smpost_nse_top_gainers.png', f"Top {n} {exchange} Gainers",
+                          gainers, "↑", green,
+                          trade_date)
+    else:
+        print(f'NSE Gainers DF is empty for trade_date {trade_date}')
+
+    losers_df = get_top_n_equity_gainers_losers(trade_date=trade_date, exchange=exchange, type='L', n=n)
+    if len(losers_df) != 0:
+        losers = [(issuername_capitalize(row['issuer_name']), row['current_close'], row['percentage_change']) for _, row
+                  in losers_df.iterrows()]
+        draw_top_equities(background_image_path, font_path, 'smpost_nse_top_losers.png', f"Top {n} {exchange} Losers",
+                          losers, "↓", red, trade_date)
+    else:
+        print(f'NSE Losers DF is empty for trade_date {trade_date}')
 
