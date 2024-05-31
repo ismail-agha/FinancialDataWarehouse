@@ -29,7 +29,7 @@ def get_top_n_equity_gainers_losers(trade_date, exchange, type, n=5):
     '''
 
     try:
-        file_path = os.path.join(parent_dir, f"sql/sql_get_top_five_equity.sql")
+        file_path = os.path.join(parent_dir, f"sql/sql_get_top_n_equity.sql")
         sql_query = read_sql_file(file_path)
         params = {'trade_date': trade_date, 'exchange': exchange}
         order_clause = 'DESC' if type == 'G' else 'ASC'
