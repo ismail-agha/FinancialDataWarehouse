@@ -26,8 +26,8 @@ def is_holiday():
 
         #print(response.text)
 
-        # Save the JSON response to a file with pretty formatting
-        with open('../files/market_holidays.json', "w") as json_file:
+        # Save the JSON response to a file with pretty formatting | os.path.join(parent_dir, f"files/market_holidays.json}")
+        with open(os.path.join(parent_dir, f'files/market_holidays.json'), "w") as json_file:
             json.dump(json.loads(response.text), json_file, indent=4)
 
         # Parse the JSON response

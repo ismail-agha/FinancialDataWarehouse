@@ -122,7 +122,7 @@ def convert_date(date_str):
     return f"{formatted_date} ({day_of_week})"
 
 if __name__ == "__main__":
-    if len(sys.argv) > 1:
+    if len(sys.argv) > 1 and sys.argv[1]!='':
         trade_date = sys.argv[1]
     else:
         trade_date = datetime.now().strftime("%Y-%m-%d")
