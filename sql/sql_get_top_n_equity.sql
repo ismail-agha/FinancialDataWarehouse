@@ -9,6 +9,7 @@ WITH PreviousClose AS (
     WHERE
         DATE(trade_date) < %(trade_date)s
         AND exchange = %(exchange)s
+        AND close <> 0
 )
 , LatestClose AS (
     SELECT
