@@ -50,5 +50,5 @@ JOIN
 WHERE
     el.status = 'Active'
     AND pc.prev_close IS NOT NULL
--- ORDER BY clause & LIMIT will be appended dynamically in the Python code
+-- ORDER BY clause & LIMIT will be appended dynamically in the Python code.
 ;
