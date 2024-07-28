@@ -123,6 +123,10 @@ def insert_data(data, isin_number, security_name, exchange):
     #print(data)
     df = pd.DataFrame(data)
     df.columns = ['trade_date', 'open', 'high', 'low', 'close', 'volume', 'open_interest']
+
+    # Convert trade_date to datetime and extract only the date part
+    df['trade_date'] = pd.to_datetime(df['trade_date']).dt.date
+
     df['exchange'] = exchange
     df['isin_number'] = isin_number
     df['security_name'] = security_name
