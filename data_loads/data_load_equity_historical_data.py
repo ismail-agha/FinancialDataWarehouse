@@ -138,7 +138,7 @@ def insert_data(data, isin_number, security_name, exchange):
 
     # Create the insert statement
     insert_stmt = pg_insert(TABLE_MODEL_EQUITY_HISTORICAL_DATA).values(records)
-    update_dict = {'close': insert_stmt.excluded.close, 'audit_update_date': pd.Timestamp.today(), 'audit_updated_by': 'data_load_equity_historical_data.py'}
+    update_dict = {'close': insert_stmt.excluded.close, 'security_name': security_name, 'audit_update_date': pd.Timestamp.today(), 'audit_updated_by': 'data_load_equity_historical_data.py'}
 
     #insert_stmt = insert_stmt.on_conflict_do_nothing(index_elements=['exchange', 'isin_number', 'trade_date'])
 
