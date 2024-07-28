@@ -127,13 +127,21 @@ def insert_data(data, isin_number, security_name, exchange):
     df['isin_number'] = isin_number
     df['security_name'] = security_name
     df['audit_creation_date'] = pd.Timestamp.today()
+    df['audit_created_by'] = 'data_load_equity_historical_data.py'
     #print('ABCD = ' + df.to_string())
 
     records = df.to_dict(orient='records')
 
     # Create the insert statement
     insert_stmt = pg_insert(TABLE_MODEL_EQUITY_HISTORICAL_DATA).values(records)
-    insert_stmt = insert_stmt.on_conflict_do_nothing(index_elements=['exchange', 'isin_number', 'trade_date'])
+    update_dict = {'close': insert_stmt.excluded.close, 'audit_update_date': pd.Timestamp.today(), 'audit_updated_by': 'data_load_equity_historical_data.py'}
+
+    #insert_stmt = insert_stmt.on_conflict_do_nothing(index_elements=['exchange', 'isin_number', 'trade_date'])
+
+    insert_stmt = insert_stmt.on_conflict_do_update(
+        index_elements=['exchange', 'isin_number', 'trade_date'],
+        set_=update_dict
+    )
 
     try:
         session.execute(insert_stmt)
