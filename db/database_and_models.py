@@ -67,6 +67,10 @@ class TABLE_MODEL_EQUITY_HISTORICAL_DATA(Base):
     upper_circuit_limit = Column(Integer)
     open_interest = Column(Integer)
     audit_creation_date = Column(String)
+    audit_created_by = Column(String)
+    audit_update_date = Column(String)
+    audit_updated_by = Column(String)
+
 
     def __repr__(self):
         return f"<YourTable(id={self.id}, security_code='{self.security_code}', column_name='{self.column_name}')>"
