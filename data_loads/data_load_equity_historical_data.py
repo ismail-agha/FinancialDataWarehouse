@@ -17,6 +17,7 @@ from configs.config_urls import upstox_historical
 
 from db.database_and_models import engine, TABLE_MODEL_EQUITY_HISTORICAL_DATA, session, SQLAlchemyError, text
 from sqlalchemy.dialects.postgresql import insert as pg_insert
+from sqlalchemy import create_engine
 
 #Logs
 # Create a timestamp string
@@ -97,9 +98,14 @@ def main():
 
 
 def db_maintenance():
+    DATABASE_URL = ""
+
+    # Create a new SQLAlchemy engine instance
+    engine_db_maint = create_engine(DATABASE_URL)
+
     sql_vacuum_analyze = text("VACUUM FULL ANALYZE;")
     try:
-        with engine.connect() as connection:
+        with engine_db_maint.connect() as connection:
             connection.execute(sql_vacuum_analyze)
     except Exception as e:
         logger.error(f'db_maintenance() - Exception : {e}')
