@@ -17,7 +17,8 @@ from configs.config import DATABASE_URL
 timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
 
 # Configure the logging settings
-log_filename = f"../logs/db_maintenance_{timestamp}.log"
+#log_filename = f"../logs/db_maintenance_{timestamp}.log"
+log_filename = os.path.join(parent_dir, f"../logs/db_maintenance_{timestamp}.log")
 
 logging.basicConfig(
     level=logging.DEBUG,
@@ -41,7 +42,7 @@ try:
         # Execute the VACUUM FULL ANALYZE command
         connection.execute(sql_vacuum_analyze)
 except Exception as e:
-    logger.error(f'db_maintenance() - Exception : {e}')
+    logger.error(f'db_maintenance(VACUUM FULL ANALYZE) - Exception : {e}')
 else:
     # If no exceptions occur, commit the transaction
     # session.commit()
