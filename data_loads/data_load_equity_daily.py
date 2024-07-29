@@ -193,10 +193,10 @@ def db_final_activities():
         session.commit()
     except Exception as e:
         print("Error updating data into the database:", e)
-        custom_logging(logger, 'ERROR', f'\nError in db_final_activities(mcap). Error = {e}.')
+        custom_logging(logger, 'ERROR', f'Error in db_final_activities(mcap). Error = {e}.')
         raise
     else:
-        custom_logging(logger, 'INFO', f'\nCompleted db_final_activities(mcap).')
+        custom_logging(logger, 'INFO', f'Completed db_final_activities(mcap).\n')
 
     #------------------------------------------------------------------------------------------
     # 2. Identify Missing ISIN
@@ -206,12 +206,12 @@ def db_final_activities():
         # Log the results
         result_str = "Missing Stocks for today's run:\n"
         for _, row in result_df.iterrows():
-            result_str += f"Exchange: {row['exchange']}, Trade Date: {row['trade_date']}, Count: {row['count']}, ISIN Numbers: {row['isin_numbers']} .\n"
+            result_str += f"Exchange: {row['exchange']}, Trade Date: {row['trade_date']}, Count: {row['count']}, ISIN Numbers: {row['isin_numbers']} .\n\n"
 
         custom_logging(logger, 'INFO', result_str)
 
     except Exception as e:
-        custom_logging(logger, 'ERROR', f"\nError in db_final_activities(Missing ISIN). Error = {e}.")
+        custom_logging(logger, 'ERROR', f"Error in db_final_activities(Missing ISIN). Error = {e}.")
 
 def main():
     isin_df = generate_isin_str('sql_generate_isin_str.sql')
@@ -223,7 +223,7 @@ if __name__ == "__main__":
         custom_logging(logger, 'INFO', f'Start time: {pd.Timestamp.today()}')
         main()
     except Exception as e:
-        custom_logging(logger, 'ERROR', f'\nEnd time: {pd.Timestamp.today()}')
+        custom_logging(logger, 'ERROR', f'End time: {pd.Timestamp.today()}')
         exit(1)
     else:
-        custom_logging(logger, 'INFO', f'\nEnd time: {pd.Timestamp.today()}')
+        custom_logging(logger, 'INFO', f'End time: {pd.Timestamp.today()}')
