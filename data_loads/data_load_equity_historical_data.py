@@ -100,7 +100,7 @@ def db_maintenance():
     sql_vacuum_analyze = text("VACUUM FULL ANALYZE;")
     try:
         with engine.connect() as connection:
-            connection.execute(text(sql_vacuum_analyze))
+            connection.execute(sql_vacuum_analyze)
     except Exception as e:
         logger.error(f'db_maintenance() - Exception : {e}')
     else:
