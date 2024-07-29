@@ -18,7 +18,7 @@ timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
 
 # Configure the logging settings
 #log_filename = f"../logs/db_maintenance_{timestamp}.log"
-log_filename = os.path.join(parent_dir, f"../logs/db_maintenance_{timestamp}.log")
+log_filename = os.path.join(parent_dir, f"logs/db_maintenance_{timestamp}.log")
 
 logging.basicConfig(
     level=logging.DEBUG,
