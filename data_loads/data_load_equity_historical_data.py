@@ -106,14 +106,8 @@ def db_maintenance():
     sql_vacuum_analyze = text("VACUUM FULL ANALYZE;")
     try:
         with engine_db_maint.connect() as connection:
-            logger.info("Connection established successfully.")
-            #connection.execute(sql_vacuum_analyze)
-
             # Enable autocommit mode to run VACUUM outside a transaction block
             connection = connection.execution_options(isolation_level="AUTOCOMMIT")
-
-            # Debugging statement to confirm autocommit
-            logger.info("Autocommit mode enabled.")
 
             # Execute the VACUUM FULL ANALYZE command
             connection.execute(sql_vacuum_analyze)
