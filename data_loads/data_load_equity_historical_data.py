@@ -111,9 +111,6 @@ def db_maintenance():
 
             # Execute the VACUUM FULL ANALYZE command
             connection.execute(sql_vacuum_analyze)
-
-            logger.info("Simple SELECT command executed successfully.")
-
     except Exception as e:
         logger.error(f'db_maintenance() - Exception : {e}')
     else:
