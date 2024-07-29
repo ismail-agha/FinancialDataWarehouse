@@ -92,6 +92,9 @@ def api_get_data(upstox_token, isin_df):
                         # print(i)
                         # print(parsed_json['data'][i]['instrument_token'])
 
+                        trade_date = datetime.fromtimestamp(int(data['data'][i]['last_trade_time']) / 1000).date()
+                        formatted_trade_date = trade_date.strftime('%Y-%m-%d')
+
                         new_row = {'exchange': data['data'][i]['instrument_token'][:3],
                                    'isin_number': data['data'][i]['instrument_token'][7:],
 
@@ -107,8 +110,7 @@ def api_get_data(upstox_token, isin_df):
                                    'total_sell_quantity': data['data'][i]['total_sell_quantity'],
                                    'lower_circuit_limit': data['data'][i]['lower_circuit_limit'],
                                    'upper_circuit_limit': data['data'][i]['upper_circuit_limit'],
-                                   'trade_date': datetime.fromtimestamp(
-                                       int(data['data'][i]['last_trade_time']) / 1000),
+                                   'trade_date': formatted_trade_date,
                                    }
 
                         df = pd.concat([df, pd.DataFrame([new_row])], ignore_index=True)
@@ -116,22 +118,22 @@ def api_get_data(upstox_token, isin_df):
                     #print(df.to_string())
 
                     insert_data(df)
-                    custom_logging(logger, 'INFO', f'Completed api_get_data().')
+                    #custom_logging(logger, 'INFO', f'Completed api_get_data().')
 
             except Exception as exc:
                 print(f'API call to {url} failed: {exc}')
                 custom_logging(logger, 'ERROR', f'Error in api_get_data(). Error = {e}.')
                 raise
 
-    db_update_table()
+    db_final_activities()
 
     session.close()
 
 def make_api_call(url, headers):
     #print(f'URL = {url} | headers = {headers}')
     try:
-        logger.info(f'URL = {url} \n')
-        custom_logging(logger, 'INFO', f'Running make_api_call() for URL = {url}.')
+        #logger.info(f'URL = {url} \n')
+        custom_logging(logger, 'INFO', f'\nRunning make_api_call() for URL = {url}.')
         response = requests.get(url, headers=headers)
         if response.status_code == 200:
             return response.json()
@@ -170,11 +172,12 @@ def insert_data(data):
         custom_logging(logger, 'ERROR', f'Error in (2) insert_data(). Error = {e}.')
         raise
 
-    finally:
-        custom_logging(logger, 'INFO', f'Completed insert_data().')
+    #finally:
+    #    custom_logging(logger, 'INFO', f'Completed insert_data().')
         #session.close()
 
-def db_update_table():
+def db_final_activities():
+    # 1. Updating the MCap
     try:
         update_query = text("""
             UPDATE sm.equity_historical_data ehd
@@ -190,12 +193,38 @@ def db_update_table():
         session.commit()
     except Exception as e:
         print("Error updating data into the database:", e)
-        custom_logging(logger, 'ERROR', f'Error in db_update_table(mcap). Error = {e}.')
+        custom_logging(logger, 'ERROR', f'\nError in db_final_activities(mcap). Error = {e}.')
         raise
+    else:
+        custom_logging(logger, 'INFO', f'\nCompleted db_final_activities(mcap).')
 
-    finally:
-        custom_logging(logger, 'INFO', f'Completed db_update_table(mcap).')
-        #session.close()
+    #------------------------------------------------------------------------------------------
+    # 2. Identify Missing ISIN
+    try:
+        sql_missing_isin_file_path = os.path.join(parent_dir, f"sql/sql_identify_missing_isin_for_current_trade_date.sql")  # '../sql/' + sql_file
+        result_df = pd.read_sql_query(read_sql_file(sql_missing_isin_file_path), engine)
+        # Log the results
+        result_str = '\n'
+        for _, row in result_df.iterrows():
+            result_str += f"Exchange: {row['exchange']}, Trade Date: {row['trade_date']}, Count: {row['count']}, ISIN Numbers: {row['isin_numbers']}"
+
+        custom_logging(logger, 'INFO', result_str)
+
+    except Exception as e:
+        custom_logging(logger, 'ERROR', f"\nError in db_final_activities(Missing ISIN). Error = {e}.")
+    else:
+        custom_logging(logger, 'INFO', f'\nCompleted db_final_activities(Missing ISIN).')
+
+    #---------------------------------------------------------------------------------------------
+    # 3. DB Maintenance
+    sql_vacuum_analyze = text("""VACUUM FULL ANALYZE;""")
+    try:
+        session.execute(sql_vacuum_analyze)
+    except Exception as e:
+        custom_logging(logger, 'ERROR', f"\nError in db_final_activities(VACUUM ANALYZE). Error = {e}.")
+    else:
+        custom_logging(logger, 'INFO', f'\nCompleted db_final_activities(VACUUM ANALYZE).')
+
 
 def main():
     isin_df = generate_isin_str('sql_generate_isin_str.sql')
@@ -207,7 +236,7 @@ if __name__ == "__main__":
         custom_logging(logger, 'INFO', f'Start time: {pd.Timestamp.today()}')
         main()
     except Exception as e:
-        custom_logging(logger, 'ERROR', f'End time: {pd.Timestamp.today()}')
+        custom_logging(logger, 'ERROR', f'\nEnd time: {pd.Timestamp.today()}')
         exit(1)
     else:
-        custom_logging(logger, 'INFO', f'End time: {pd.Timestamp.today()}')
+        custom_logging(logger, 'INFO', f'\nEnd time: {pd.Timestamp.today()}')
