@@ -17,7 +17,7 @@ from configs.config import DATABASE_URL
 timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
 
 # Configure the logging settings
-log_filename = f"../logs/data_load_equity_historical_data_{timestamp}.log"
+log_filename = f"../logs/db_maintenance_{timestamp}.log"
 
 logging.basicConfig(
     level=logging.DEBUG,
