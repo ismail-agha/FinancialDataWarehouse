@@ -41,7 +41,6 @@ log_msg_error = ''
 def main():
 
     result_df = pd.read_sql_query(read_sql_file('../sql/sql_identify_equity_for_historical_load.sql'), engine)
-    #print(result_df)
 
     interval = 'day'
     from_date = '2000-01-01'
