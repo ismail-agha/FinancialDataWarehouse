@@ -97,13 +97,17 @@ def main():
 
 
 def db_maintenance():
-    sql_vacuum_analyze = "VACUUM FULL ANALYZE;"
+    sql_vacuum_analyze = text("VACUUM FULL ANALYZE;")
     try:
         session.execute(sql_vacuum_analyze)
     except Exception as e:
         logger.error(f'db_maintenance() - Exception : {e}')
+    else:
+        # If no exceptions occur, commit the transaction
+        session.commit()
+        logger.info(f'db_maintenance() - VACUUM FULL and ANALYZE completed successfully.\n')
     finally:
-        logger.info(f'db_maintenance() - VACUUM FULL and ANALYZE Complated.\n')
+        # Ensure the session is closed regardless of what happens
         session.close()
 
 def read_sql_file(file_path):
