@@ -45,7 +45,7 @@ def main():
 
     interval = 'day'
     from_date = '2000-01-01'
-    to_date = datetime.now().strftime("%Y-%m-%d")
+    to_date = '2024-07-27' #datetime.now().strftime("%Y-%m-%d")
 
     total_rows = len(result_df)
     logger.info(f'Main - Total Rows (ISIN_NUMBERS) = {total_rows}.\n')
@@ -94,6 +94,19 @@ def main():
 
         time.sleep(2)
 
+    db_maintenance()
+
+
+def db_maintenance():
+    sql_vacuum_analyze = "VACUUM FULL ANALYZE;"
+    try:
+        session.execute(sql_vacuum_analyze)
+    except Exception as e:
+        logger.error(f'db_maintenance() - Exception : {e}')
+    finally:
+        logger.info(f'db_maintenance() - VACUUM FULL and ANALYZE Complated.\n')
+        session.close()
+
 def read_sql_file(file_path):
     with open(file_path, 'r') as file:
         sql_query = file.read()
@@ -120,77 +133,86 @@ def make_api_call(url):
 
 
 def insert_data(data, isin_number, security_name, exchange):
+    global from_date, to_date
     #print(data)
-    df = pd.DataFrame(data)
-    df.columns = ['trade_date', 'open', 'high', 'low', 'close', 'volume', 'open_interest']
+    if not data:
+        #print("No data in candles")
+        logger.info(f'insert_data() - Note SecurityCode={isin_number} has no data for the given period.\n')
+    else:
+        df = pd.DataFrame(data)
+        df.columns = ['trade_date', 'open', 'high', 'low', 'close', 'volume', 'open_interest']
 
-    # Convert trade_date to datetime and extract only the date part
-    df['trade_date'] = pd.to_datetime(df['trade_date']).dt.date
+        # Convert trade_date to datetime and extract only the date part
+        df['trade_date'] = pd.to_datetime(df['trade_date']).dt.date
 
-    df['exchange'] = exchange
-    df['isin_number'] = isin_number
-    df['security_name'] = security_name
-    df['audit_creation_date'] = pd.Timestamp.today()
-    df['audit_created_by'] = 'data_load_equity_historical_data.py'
-    #print('ABCD = ' + df.to_string())
+        df['exchange'] = exchange
+        df['isin_number'] = isin_number
+        df['security_name'] = security_name
+        df['audit_creation_date'] = pd.Timestamp.today()
+        df['audit_created_by'] = 'data_load_equity_historical_data.py'
 
-    records = df.to_dict(orient='records')
+        records = df.to_dict(orient='records')
 
-    # Create the insert statement
-    insert_stmt = pg_insert(TABLE_MODEL_EQUITY_HISTORICAL_DATA).values(records)
-    update_dict = {'close': insert_stmt.excluded.close, 'security_name': security_name, 'audit_update_date': pd.Timestamp.today(), 'audit_updated_by': 'data_load_equity_historical_data.py'}
+        # Create the insert statement
+        insert_stmt = pg_insert(TABLE_MODEL_EQUITY_HISTORICAL_DATA).values(records)
 
-    #insert_stmt = insert_stmt.on_conflict_do_nothing(index_elements=['exchange', 'isin_number', 'trade_date'])
+        insert_stmt = insert_stmt.on_conflict_do_nothing(
+            index_elements=['exchange', 'isin_number', 'trade_date']
+        )
 
-    insert_stmt = insert_stmt.on_conflict_do_update(
-        index_elements=['exchange', 'isin_number', 'trade_date'],
-        set_=update_dict
-    )
+        # update_dict = {
+        #     'close': insert_stmt.excluded.close, 'security_name': security_name,
+        #     'audit_update_date': pd.Timestamp.today(), 'audit_updated_by': 'data_load_equity_historical_data.py'
+        # }
+        # insert_stmt = insert_stmt.on_conflict_do_update(
+        #     index_elements=['exchange', 'isin_number', 'trade_date'],
+        #     set_=update_dict
+        # )
 
-    try:
-        session.execute(insert_stmt)
-        session.commit()
-    except SQLAlchemyError as e:
-        print(f'insert_data() - 1. Except: SecurityCode={isin_number} Errored-Out: {e}\n\n')
-        logger.error(f'insert_data() - Except(1): SecurityCode={isin_number} Errored-Out: {e}\n')
-        error = str(e)
+        try:
+            session.execute(insert_stmt)
+            session.commit()
+        except SQLAlchemyError as e:
+            print(f'insert_data() - 1. Except: SecurityCode={isin_number} Errored-Out: {e}\n\n')
+            logger.error(f'insert_data() - Except(1): SecurityCode={isin_number} Errored-Out: {e}\n')
+            error = str(e)
 
-    except Exception as e:
-        print(f"insert_data() - 2. Except: SecurityCode={isin_number} Errored-Out:", e)
-        logger.error(f'insert_data() - Except(2): SecurityCode={isin_number} Errored-Out: {e}')
+        except Exception as e:
+            print(f"insert_data() - 2. Except: SecurityCode={isin_number} Errored-Out:", e)
+            logger.error(f'insert_data() - Except(2): SecurityCode={isin_number} Errored-Out: {e}')
 
-    finally:
-        print(f'Finally Completed: SecurityCode={isin_number} Loaded Successfuly.\n\n')
-        logger.info(f'insert_data() - Finally Completed: SecurityCode={isin_number} Loaded Successfuly.\n')
-        session.close()
+        finally:
+            print(f'Finally Completed: SecurityCode={isin_number} Loaded Successfuly.\n\n')
+            logger.info(f'insert_data() - Finally Completed: SecurityCode={isin_number} Loaded Successfuly.\n')
+            session.close()
 
-    # Insert into stats
-    # Define the SQL statement
-    # sql_ins_historical_load_status = text("""
-    #     INSERT INTO sm.audit_equity_historical_load_status (exchange, isin_number, audit_creation_date, audit_update_date)
-    #     VALUES (:exchange, :isin_number, :audit_creation_date, :audit_update_date)
-    #     ON CONFLICT (exchange, isin_number)
-    #     DO UPDATE SET
-    #         audit_update_date = EXCLUDED.audit_update_date
-    #     WHERE sm.audit_equity_historical_load_status.exchange = :exchange and sm.audit_equity_historical_load_status.isin_number = :isin_number
-    # """)
-    #
-    # # Bind parameters
-    # params = {
-    #     "exchange": exchange,
-    #     'isin_number': isin_number,
-    #     'audit_creation_date': pd.Timestamp.today(),
-    #     'audit_update_date': pd.Timestamp.today()
-    # }
-    #
-    # # Execute the SQL statement
-    # try:
-    #     with engine.connect() as connection:
-    #         a = connection.execute(sql_ins_historical_load_status, params)
-    #         connection.commit()
-    # except Exception as e:
-    #     print(f"insert_data(audit_equity_historical_load_status) - Except: SecurityCode={isin_number} Errored-Out:", e)
-    #     logger.error(f'insert_data(audit_equity_historical_load_status) - SecurityCode={isin_number} Errored-Out: {e}')
+        # Insert into stats
+        # Define the SQL statement
+        # sql_ins_historical_load_status = text("""
+        #     INSERT INTO sm.audit_equity_historical_load_status (exchange, isin_number, audit_creation_date, audit_update_date)
+        #     VALUES (:exchange, :isin_number, :audit_creation_date, :audit_update_date)
+        #     ON CONFLICT (exchange, isin_number)
+        #     DO UPDATE SET
+        #         audit_update_date = EXCLUDED.audit_update_date
+        #     WHERE sm.audit_equity_historical_load_status.exchange = :exchange and sm.audit_equity_historical_load_status.isin_number = :isin_number
+        # """)
+        #
+        # # Bind parameters
+        # params = {
+        #     "exchange": exchange,
+        #     'isin_number': isin_number,
+        #     'audit_creation_date': pd.Timestamp.today(),
+        #     'audit_update_date': pd.Timestamp.today()
+        # }
+        #
+        # # Execute the SQL statement
+        # try:
+        #     with engine.connect() as connection:
+        #         a = connection.execute(sql_ins_historical_load_status, params)
+        #         connection.commit()
+        # except Exception as e:
+        #     print(f"insert_data(audit_equity_historical_load_status) - Except: SecurityCode={isin_number} Errored-Out:", e)
+        #     logger.error(f'insert_data(audit_equity_historical_load_status) - SecurityCode={isin_number} Errored-Out: {e}')
 
 
 if __name__ == "__main__":
