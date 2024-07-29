@@ -15,6 +15,11 @@ s3_client = boto3.client('s3')
 bucket_name = 's3.financial.data.warehouse'
 
 
+# --------------
+# DB
+# --------------
+DATABASE_URL = ""
+
 # -----------------------
 # Timestamp for logging
 # -----------------------

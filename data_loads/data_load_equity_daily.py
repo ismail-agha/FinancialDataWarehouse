@@ -204,27 +204,14 @@ def db_final_activities():
         sql_missing_isin_file_path = os.path.join(parent_dir, f"sql/sql_identify_missing_isin_for_current_trade_date.sql")  # '../sql/' + sql_file
         result_df = pd.read_sql_query(read_sql_file(sql_missing_isin_file_path), engine)
         # Log the results
-        result_str = '\n'
+        result_str = "Missing Stocks for today's run:\n"
         for _, row in result_df.iterrows():
-            result_str += f"Exchange: {row['exchange']}, Trade Date: {row['trade_date']}, Count: {row['count']}, ISIN Numbers: {row['isin_numbers']}"
+            result_str += f"Exchange: {row['exchange']}, Trade Date: {row['trade_date']}, Count: {row['count']}, ISIN Numbers: {row['isin_numbers']} .\n"
 
         custom_logging(logger, 'INFO', result_str)
 
     except Exception as e:
         custom_logging(logger, 'ERROR', f"\nError in db_final_activities(Missing ISIN). Error = {e}.")
-    else:
-        custom_logging(logger, 'INFO', f'\nCompleted db_final_activities(Missing ISIN).')
-
-    #---------------------------------------------------------------------------------------------
-    # 3. DB Maintenance
-    sql_vacuum_analyze = text("""VACUUM FULL ANALYZE;""")
-    try:
-        session.execute(sql_vacuum_analyze)
-    except Exception as e:
-        custom_logging(logger, 'ERROR', f"\nError in db_final_activities(VACUUM ANALYZE). Error = {e}.")
-    else:
-        custom_logging(logger, 'INFO', f'\nCompleted db_final_activities(VACUUM ANALYZE).')
-
 
 def main():
     isin_df = generate_isin_str('sql_generate_isin_str.sql')
