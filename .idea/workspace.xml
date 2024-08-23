@@ -3,9 +3,9 @@
   <component name="ChangeListManager">
     <list default="true" id="6306b164-a51a-4a56-91e2-cf2d8595bc4a" name="Changes" comment="commit">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/data_loads/test.py" beforeDir="false" afterPath="$PROJECT_DIR$/data_loads/test.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/sql/dpd_sql_identify_equity_for_historical_load.sql" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/sql/sql_get_top_n_equity.sql" beforeDir="false" afterPath="$PROJECT_DIR$/sql/sql_get_top_n_equity.sql" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/data_loads/data_load_equity_daily.py" beforeDir="false" afterPath="$PROJECT_DIR$/data_loads/data_load_equity_daily.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/data_loads/dpd_data_load_equity_historical_data.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/sql/sql_identify_equity_for_historical_load.sql" beforeDir="false" afterPath="$PROJECT_DIR$/sql/sql_identify_equity_for_historical_load.sql" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -56,7 +56,7 @@
       <recent name="C:\Users\Ismail\PycharmProjects\FinancialDataWarehouse\data_loads" />
     </key>
   </component>
-  <component name="RunManager" selected="Python.fdw_orchestrator">
+  <component name="RunManager" selected="Python.test3">
     <configuration name="data_load_equity_list" type="PythonConfigurationType" factoryName="Python" nameIsGenerated="true">
       <module name="FinancialDataWarehouse" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -141,48 +141,6 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
-    <configuration name="generate_sm_post" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
-      <module name="FinancialDataWarehouse" />
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/social_media" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="SCRIPT_NAME" value="C:\Users\Ismail\PycharmProjects\FinancialDataWarehouse\social_media\generate_sm_post.py" />
-      <option name="PARAMETERS" value="" />
-      <option name="SHOW_COMMAND_LINE" value="false" />
-      <option name="EMULATE_TERMINAL" value="false" />
-      <option name="MODULE_MODE" value="false" />
-      <option name="REDIRECT_INPUT" value="false" />
-      <option name="INPUT_FILE" value="" />
-      <method v="2" />
-    </configuration>
-    <configuration name="get_data" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
-      <module name="FinancialDataWarehouse" />
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/api" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/api/get_data.py" />
-      <option name="PARAMETERS" value="" />
-      <option name="SHOW_COMMAND_LINE" value="false" />
-      <option name="EMULATE_TERMINAL" value="false" />
-      <option name="MODULE_MODE" value="false" />
-      <option name="REDIRECT_INPUT" value="false" />
-      <option name="INPUT_FILE" value="" />
-      <method v="2" />
-    </configuration>
     <configuration name="test" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="FinancialDataWarehouse" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -204,13 +162,55 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
+    <configuration name="test2" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="FinancialDataWarehouse" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/data_loads" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/data_loads/test2.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="test3" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="FinancialDataWarehouse" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/data_loads" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/data_loads/test3.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Python.test3" />
+        <item itemvalue="Python.test2" />
         <item itemvalue="Python.fdw_orchestrator" />
         <item itemvalue="Python.test" />
         <item itemvalue="Python.generate_sm_post (1)" />
-        <item itemvalue="Python.get_data" />
-        <item itemvalue="Python.generate_sm_post" />
       </list>
     </recent_temporary>
   </component>
@@ -222,167 +222,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1685261138075</updated>
-    </task>
-    <task id="LOCAL-00091" summary="commit">
-      <created>1715148426428</created>
-      <option name="number" value="00091" />
-      <option name="presentableId" value="LOCAL-00091" />
-      <option name="project" value="LOCAL" />
-      <updated>1715148426428</updated>
-    </task>
-    <task id="LOCAL-00092" summary="commit">
-      <created>1715148801170</created>
-      <option name="number" value="00092" />
-      <option name="presentableId" value="LOCAL-00092" />
-      <option name="project" value="LOCAL" />
-      <updated>1715148801170</updated>
-    </task>
-    <task id="LOCAL-00093" summary="commit">
-      <created>1715150821442</created>
-      <option name="number" value="00093" />
-      <option name="presentableId" value="LOCAL-00093" />
-      <option name="project" value="LOCAL" />
-      <updated>1715150821442</updated>
-    </task>
-    <task id="LOCAL-00094" summary="commit">
-      <created>1715230523371</created>
-      <option name="number" value="00094" />
-      <option name="presentableId" value="LOCAL-00094" />
-      <option name="project" value="LOCAL" />
-      <updated>1715230523371</updated>
-    </task>
-    <task id="LOCAL-00095" summary="commit">
-      <created>1715233554210</created>
-      <option name="number" value="00095" />
-      <option name="presentableId" value="LOCAL-00095" />
-      <option name="project" value="LOCAL" />
-      <updated>1715233554210</updated>
-    </task>
-    <task id="LOCAL-00096" summary="commit">
-      <created>1715234710733</created>
-      <option name="number" value="00096" />
-      <option name="presentableId" value="LOCAL-00096" />
-      <option name="project" value="LOCAL" />
-      <updated>1715234710733</updated>
-    </task>
-    <task id="LOCAL-00097" summary="commit">
-      <created>1715496209991</created>
-      <option name="number" value="00097" />
-      <option name="presentableId" value="LOCAL-00097" />
-      <option name="project" value="LOCAL" />
-      <updated>1715496209991</updated>
-    </task>
-    <task id="LOCAL-00098" summary="commit">
-      <created>1715500969987</created>
-      <option name="number" value="00098" />
-      <option name="presentableId" value="LOCAL-00098" />
-      <option name="project" value="LOCAL" />
-      <updated>1715500969987</updated>
-    </task>
-    <task id="LOCAL-00099" summary="commit">
-      <created>1715502821213</created>
-      <option name="number" value="00099" />
-      <option name="presentableId" value="LOCAL-00099" />
-      <option name="project" value="LOCAL" />
-      <updated>1715502821213</updated>
-    </task>
-    <task id="LOCAL-00100" summary="commit">
-      <created>1715508722794</created>
-      <option name="number" value="00100" />
-      <option name="presentableId" value="LOCAL-00100" />
-      <option name="project" value="LOCAL" />
-      <updated>1715508722794</updated>
-    </task>
-    <task id="LOCAL-00101" summary="commit">
-      <created>1715508912224</created>
-      <option name="number" value="00101" />
-      <option name="presentableId" value="LOCAL-00101" />
-      <option name="project" value="LOCAL" />
-      <updated>1715508912224</updated>
-    </task>
-    <task id="LOCAL-00102" summary="commit">
-      <created>1715509129483</created>
-      <option name="number" value="00102" />
-      <option name="presentableId" value="LOCAL-00102" />
-      <option name="project" value="LOCAL" />
-      <updated>1715509129483</updated>
-    </task>
-    <task id="LOCAL-00103" summary="commit">
-      <created>1715510025802</created>
-      <option name="number" value="00103" />
-      <option name="presentableId" value="LOCAL-00103" />
-      <option name="project" value="LOCAL" />
-      <updated>1715510025802</updated>
-    </task>
-    <task id="LOCAL-00104" summary="commit">
-      <created>1715532082758</created>
-      <option name="number" value="00104" />
-      <option name="presentableId" value="LOCAL-00104" />
-      <option name="project" value="LOCAL" />
-      <updated>1715532082758</updated>
-    </task>
-    <task id="LOCAL-00105" summary="commit">
-      <created>1715532406254</created>
-      <option name="number" value="00105" />
-      <option name="presentableId" value="LOCAL-00105" />
-      <option name="project" value="LOCAL" />
-      <updated>1715532406254</updated>
-    </task>
-    <task id="LOCAL-00106" summary="commit">
-      <created>1715543318481</created>
-      <option name="number" value="00106" />
-      <option name="presentableId" value="LOCAL-00106" />
-      <option name="project" value="LOCAL" />
-      <updated>1715543318481</updated>
-    </task>
-    <task id="LOCAL-00107" summary="commit">
-      <created>1715578969597</created>
-      <option name="number" value="00107" />
-      <option name="presentableId" value="LOCAL-00107" />
-      <option name="project" value="LOCAL" />
-      <updated>1715578969597</updated>
-    </task>
-    <task id="LOCAL-00108" summary="commit">
-      <created>1715623819816</created>
-      <option name="number" value="00108" />
-      <option name="presentableId" value="LOCAL-00108" />
-      <option name="project" value="LOCAL" />
-      <updated>1715623819816</updated>
-    </task>
-    <task id="LOCAL-00109" summary="commit">
-      <created>1715623980967</created>
-      <option name="number" value="00109" />
-      <option name="presentableId" value="LOCAL-00109" />
-      <option name="project" value="LOCAL" />
-      <updated>1715623980967</updated>
-    </task>
-    <task id="LOCAL-00110" summary="commit">
-      <created>1715624696247</created>
-      <option name="number" value="00110" />
-      <option name="presentableId" value="LOCAL-00110" />
-      <option name="project" value="LOCAL" />
-      <updated>1715624696247</updated>
-    </task>
-    <task id="LOCAL-00111" summary="commit">
-      <created>1715625215620</created>
-      <option name="number" value="00111" />
-      <option name="presentableId" value="LOCAL-00111" />
-      <option name="project" value="LOCAL" />
-      <updated>1715625215620</updated>
-    </task>
-    <task id="LOCAL-00112" summary="commit">
-      <created>1715626926504</created>
-      <option name="number" value="00112" />
-      <option name="presentableId" value="LOCAL-00112" />
-      <option name="project" value="LOCAL" />
-      <updated>1715626926504</updated>
-    </task>
-    <task id="LOCAL-00113" summary="commit">
-      <created>1716226937017</created>
-      <option name="number" value="00113" />
-      <option name="presentableId" value="LOCAL-00113" />
-      <option name="project" value="LOCAL" />
-      <updated>1716226937017</updated>
     </task>
     <task id="LOCAL-00114" summary="commit">
       <created>1716232074915</created>
@@ -566,7 +405,168 @@
       <option name="project" value="LOCAL" />
       <updated>1717191496131</updated>
     </task>
-    <option name="localTasksCounter" value="140" />
+    <task id="LOCAL-00140" summary="commit">
+      <created>1717439358981</created>
+      <option name="number" value="00140" />
+      <option name="presentableId" value="LOCAL-00140" />
+      <option name="project" value="LOCAL" />
+      <updated>1717439358981</updated>
+    </task>
+    <task id="LOCAL-00141" summary="commit">
+      <created>1717439419373</created>
+      <option name="number" value="00141" />
+      <option name="presentableId" value="LOCAL-00141" />
+      <option name="project" value="LOCAL" />
+      <updated>1717439419373</updated>
+    </task>
+    <task id="LOCAL-00142" summary="commit">
+      <created>1722166239518</created>
+      <option name="number" value="00142" />
+      <option name="presentableId" value="LOCAL-00142" />
+      <option name="project" value="LOCAL" />
+      <updated>1722166239518</updated>
+    </task>
+    <task id="LOCAL-00143" summary="commit">
+      <created>1722166349928</created>
+      <option name="number" value="00143" />
+      <option name="presentableId" value="LOCAL-00143" />
+      <option name="project" value="LOCAL" />
+      <updated>1722166349928</updated>
+    </task>
+    <task id="LOCAL-00144" summary="commit">
+      <created>1722175017346</created>
+      <option name="number" value="00144" />
+      <option name="presentableId" value="LOCAL-00144" />
+      <option name="project" value="LOCAL" />
+      <updated>1722175017346</updated>
+    </task>
+    <task id="LOCAL-00145" summary="commit">
+      <created>1722182037002</created>
+      <option name="number" value="00145" />
+      <option name="presentableId" value="LOCAL-00145" />
+      <option name="project" value="LOCAL" />
+      <updated>1722182037002</updated>
+    </task>
+    <task id="LOCAL-00146" summary="commit">
+      <created>1722182995473</created>
+      <option name="number" value="00146" />
+      <option name="presentableId" value="LOCAL-00146" />
+      <option name="project" value="LOCAL" />
+      <updated>1722182995473</updated>
+    </task>
+    <task id="LOCAL-00147" summary="commit">
+      <created>1722246860744</created>
+      <option name="number" value="00147" />
+      <option name="presentableId" value="LOCAL-00147" />
+      <option name="project" value="LOCAL" />
+      <updated>1722246860744</updated>
+    </task>
+    <task id="LOCAL-00148" summary="commit">
+      <created>1722247087912</created>
+      <option name="number" value="00148" />
+      <option name="presentableId" value="LOCAL-00148" />
+      <option name="project" value="LOCAL" />
+      <updated>1722247087912</updated>
+    </task>
+    <task id="LOCAL-00149" summary="commit">
+      <created>1722247926188</created>
+      <option name="number" value="00149" />
+      <option name="presentableId" value="LOCAL-00149" />
+      <option name="project" value="LOCAL" />
+      <updated>1722247926188</updated>
+    </task>
+    <task id="LOCAL-00150" summary="commit">
+      <created>1722248208247</created>
+      <option name="number" value="00150" />
+      <option name="presentableId" value="LOCAL-00150" />
+      <option name="project" value="LOCAL" />
+      <updated>1722248208247</updated>
+    </task>
+    <task id="LOCAL-00151" summary="commit">
+      <created>1722248504432</created>
+      <option name="number" value="00151" />
+      <option name="presentableId" value="LOCAL-00151" />
+      <option name="project" value="LOCAL" />
+      <updated>1722248504432</updated>
+    </task>
+    <task id="LOCAL-00152" summary="commit">
+      <created>1722248732056</created>
+      <option name="number" value="00152" />
+      <option name="presentableId" value="LOCAL-00152" />
+      <option name="project" value="LOCAL" />
+      <updated>1722248732056</updated>
+    </task>
+    <task id="LOCAL-00153" summary="commit">
+      <created>1722249403057</created>
+      <option name="number" value="00153" />
+      <option name="presentableId" value="LOCAL-00153" />
+      <option name="project" value="LOCAL" />
+      <updated>1722249403057</updated>
+    </task>
+    <task id="LOCAL-00154" summary="commit">
+      <created>1722249698318</created>
+      <option name="number" value="00154" />
+      <option name="presentableId" value="LOCAL-00154" />
+      <option name="project" value="LOCAL" />
+      <updated>1722249698318</updated>
+    </task>
+    <task id="LOCAL-00155" summary="commit">
+      <created>1722250125071</created>
+      <option name="number" value="00155" />
+      <option name="presentableId" value="LOCAL-00155" />
+      <option name="project" value="LOCAL" />
+      <updated>1722250125071</updated>
+    </task>
+    <task id="LOCAL-00156" summary="commit">
+      <created>1722250369662</created>
+      <option name="number" value="00156" />
+      <option name="presentableId" value="LOCAL-00156" />
+      <option name="project" value="LOCAL" />
+      <updated>1722250369662</updated>
+    </task>
+    <task id="LOCAL-00157" summary="commit">
+      <created>1722272689937</created>
+      <option name="number" value="00157" />
+      <option name="presentableId" value="LOCAL-00157" />
+      <option name="project" value="LOCAL" />
+      <updated>1722272689937</updated>
+    </task>
+    <task id="LOCAL-00158" summary="commit">
+      <created>1722274846130</created>
+      <option name="number" value="00158" />
+      <option name="presentableId" value="LOCAL-00158" />
+      <option name="project" value="LOCAL" />
+      <updated>1722274846130</updated>
+    </task>
+    <task id="LOCAL-00159" summary="commit">
+      <created>1722275172588</created>
+      <option name="number" value="00159" />
+      <option name="presentableId" value="LOCAL-00159" />
+      <option name="project" value="LOCAL" />
+      <updated>1722275172588</updated>
+    </task>
+    <task id="LOCAL-00160" summary="commit">
+      <created>1722275318753</created>
+      <option name="number" value="00160" />
+      <option name="presentableId" value="LOCAL-00160" />
+      <option name="project" value="LOCAL" />
+      <updated>1722275318753</updated>
+    </task>
+    <task id="LOCAL-00161" summary="commit">
+      <created>1722275407241</created>
+      <option name="number" value="00161" />
+      <option name="presentableId" value="LOCAL-00161" />
+      <option name="project" value="LOCAL" />
+      <updated>1722275407241</updated>
+    </task>
+    <task id="LOCAL-00162" summary="commit">
+      <created>1722277157225</created>
+      <option name="number" value="00162" />
+      <option name="presentableId" value="LOCAL-00162" />
+      <option name="project" value="LOCAL" />
+      <updated>1722277157225</updated>
+    </task>
+    <option name="localTasksCounter" value="163" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">

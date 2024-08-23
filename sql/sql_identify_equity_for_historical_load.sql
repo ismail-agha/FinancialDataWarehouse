@@ -12,7 +12,7 @@ select a.*, stat.min_trade_date, stat.max_trade_date, stat.audit_creation_date
 from a
 left join sm.AUDIT_EQUITY_HISTORICAL_LOAD_STATUS stat
 on a.isin_number = stat.isin_number and a.exg = stat.exchange
---where a.isin_number in ('INE00CE01017')
+where a.isin_number in ('INE924H01018', 'INE123F01029', 'INE038A01020')
 )
 select * from b
 --where audit_creation_date is null
