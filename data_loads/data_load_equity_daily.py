@@ -91,29 +91,33 @@ def api_get_data(upstox_token, isin_df):
                     for i in data['data']:
                         # print(i)
                         # print(parsed_json['data'][i]['instrument_token'])
+                        try:
+                            trade_date = datetime.fromtimestamp(int(data['data'][i]['last_trade_time']) / 1000).date()
+                            formatted_trade_date = trade_date.strftime('%Y-%m-%d')
 
-                        trade_date = datetime.fromtimestamp(int(data['data'][i]['last_trade_time']) / 1000).date()
-                        formatted_trade_date = trade_date.strftime('%Y-%m-%d')
+                            new_row = {'exchange': data['data'][i]['instrument_token'][:3],
+                                       'isin_number': data['data'][i]['instrument_token'][7:],
 
-                        new_row = {'exchange': data['data'][i]['instrument_token'][:3],
-                                   'isin_number': data['data'][i]['instrument_token'][7:],
+                                       'open': data['data'][i]['ohlc']['open'],
+                                       'high': data['data'][i]['ohlc']['high'],
+                                       'low': data['data'][i]['ohlc']['low'],
+                                       'close': data['data'][i]['ohlc']['close'],
 
-                                   'open': data['data'][i]['ohlc']['open'],
-                                   'high': data['data'][i]['ohlc']['high'],
-                                   'low': data['data'][i]['ohlc']['low'],
-                                   'close': data['data'][i]['ohlc']['close'],
+                                       'average_price': data['data'][i]['average_price'],
+                                       'volume': data['data'][i]['volume'],
+                                       'net_change': data['data'][i]['net_change'],
+                                       'total_buy_quantity': data['data'][i]['total_buy_quantity'],
+                                       'total_sell_quantity': data['data'][i]['total_sell_quantity'],
+                                       'lower_circuit_limit': data['data'][i]['lower_circuit_limit'],
+                                       'upper_circuit_limit': data['data'][i]['upper_circuit_limit'],
+                                       'trade_date': formatted_trade_date,
+                                       }
 
-                                   'average_price': data['data'][i]['average_price'],
-                                   'volume': data['data'][i]['volume'],
-                                   'net_change': data['data'][i]['net_change'],
-                                   'total_buy_quantity': data['data'][i]['total_buy_quantity'],
-                                   'total_sell_quantity': data['data'][i]['total_sell_quantity'],
-                                   'lower_circuit_limit': data['data'][i]['lower_circuit_limit'],
-                                   'upper_circuit_limit': data['data'][i]['upper_circuit_limit'],
-                                   'trade_date': formatted_trade_date,
-                                   }
-
-                        df = pd.concat([df, pd.DataFrame([new_row])], ignore_index=True)
+                            df = pd.concat([df, pd.DataFrame([new_row])], ignore_index=True)
+                        except Exception as e:
+                            print(f"Error API call (api_get_data) failed for data = {data['data'][i]}")
+                            custom_logging(logger, 'ERROR', f'API call (api_get_data) failed for data = {e}.')
+                            raise
 
                     #print(df.to_string())
 
