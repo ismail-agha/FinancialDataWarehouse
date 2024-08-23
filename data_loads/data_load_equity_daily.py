@@ -223,7 +223,7 @@ if __name__ == "__main__":
         custom_logging(logger, 'INFO', f'Start time: {pd.Timestamp.today()}')
         main()
     except Exception as e:
-        custom_logging(logger, 'ERROR', f'Error in __main__ {e} End time: {pd.Timestamp.today()}')
+        custom_logging(logger, 'ERROR', f'Error in __main__  {e} End time: {pd.Timestamp.today()}')
         exit(1)
     else:
         custom_logging(logger, 'INFO', f'End time: {pd.Timestamp.today()}')
