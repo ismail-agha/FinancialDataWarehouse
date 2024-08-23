@@ -126,7 +126,6 @@ def api_get_data(upstox_token, isin_df):
 
             except Exception as exc:
                 print(f'API call (api_get_data) to {url} failed: {exc}')
-                print(f'API call (api_get_data) failed {data}')
                 custom_logging(logger, 'ERROR', f'Error in api_get_data(). Error = {e}.')
                 raise
 
