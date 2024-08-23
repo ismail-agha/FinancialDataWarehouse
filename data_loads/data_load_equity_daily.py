@@ -121,7 +121,7 @@ def api_get_data(upstox_token, isin_df):
                     #custom_logging(logger, 'INFO', f'Completed api_get_data().')
 
             except Exception as exc:
-                print(f'API call to {url} failed: {exc}')
+                print(f'API call (api_get_data) to {url} failed: {exc}')
                 custom_logging(logger, 'ERROR', f'Error in api_get_data(). Error = {e}.')
                 raise
 
@@ -142,7 +142,7 @@ def make_api_call(url, headers):
                            f"Error in make_api_call(). Error = {response.status_code} - {response.reason} - {json.loads(response.text)['errors'][0]['message']}")
 
     except Exception as exc:
-        print(f'API call to {url} failed: {exc}')
+        print(f'API call (make_api_call) to {url} failed: {exc}')
         custom_logging(logger, 'ERROR', f'Error in make_api_call(). URL = {url}. Error = {e}.')
         raise
 
