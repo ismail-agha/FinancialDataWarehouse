@@ -187,7 +187,11 @@ def merge_bse_nse(df_bse, df_nse):
 
         custom_logging(logger, 'INFO', f'Completed merge_bse_nse() - BSE NSE DF Merged.')
 
+        # Drop duplicates based on primary key columns
+        df_final = df_final.drop_duplicates(subset=['isin_number', 'security_name', 'security_id', 'status'])
+
         return df_final
+
     except Exception as e:
         print(f"Error in merge_bse_nse(): {e}")
         custom_logging(logger, 'ERROR', f'Error in merge_bse_nse(): {e}')
@@ -197,9 +201,12 @@ def db_insert(df_final):
 
     data = df_final[df_final['isin_number'] == 'INE117A01022'].to_dict(orient='records')
 
-    #Insert data into the database
+    #Insert data into the database (DELETE & LOAD)
     try:
+        #Delete
         session.query(TABLE_MODEL_EQUITY_LIST).delete()
+
+        #Load
         data = df_final.to_dict(orient='records')
         session.bulk_insert_mappings(TABLE_MODEL_EQUITY_LIST, data)
         session.commit()
