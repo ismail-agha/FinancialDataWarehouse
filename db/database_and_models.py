@@ -15,9 +15,13 @@ metadata = MetaData()
 Base = declarative_base()
 class TABLE_MODEL_EQUITY_LIST(Base):
     __tablename__ = 'equity_list'
-    __table_args__ = {'schema': 'sm'}
+    #__table_args__ = {'schema': 'sm'}
+    __table_args__ = (
+        PrimaryKeyConstraint('isin_number', 'security_name', 'security_id', 'status', name='equity_list_pkey'),
+        {'schema': 'sm'}
+    )
 
-    isin_number = Column('isin_number', String, primary_key=True)
+    isin_number = Column('isin_number') #, String, primary_key=True
     bse = Column('bse', String)
     security_code_bse = Column(String)
     nse = Column('nse', String)
